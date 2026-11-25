@@ -4153,15 +4153,26 @@ img.is-crop {
 }
 
 /* "Discover" in the closing loop: hover or focus draws an orange cycle around the word */
+.loop-big:has(.loop-l2) {
+  max-width: none;
+}
+
+.loop-l2 {
+  white-space: nowrap;
+}
+
+@media (width <= 359px) {
+  .loop-l2 {
+    white-space: normal;
+  }
+}
+
+/* the site link style (.ulink: 1px hairline, orange on hover) plus the loop */
 .egg {
   position: relative;
   display: inline-block;
-  color: inherit;
-  text-decoration: underline;
-  text-decoration-color: rgb(21 21 21 / 35%);
-  text-decoration-thickness: .04em;
-  text-underline-offset: .14em;
-  transition: transform .7s cubic-bezier(.65, 0, .35, 1);
+  line-height: 1.05;
+  transition: transform .7s cubic-bezier(.65, 0, .35, 1), background-size .25s ease-out;
 }
 
 .egg-loop {
@@ -4193,9 +4204,10 @@ img.is-crop {
   transition: opacity .12s;
 }
 
+/* on hover the loop is the link state, so the hairline steps aside */
 .egg:hover,
 .egg:focus-visible {
-  text-decoration-color: transparent;
+  background-size: 0% 1px, 0% 1px;
   transform: translateY(-.03em) rotate(-2deg);
 }
 
