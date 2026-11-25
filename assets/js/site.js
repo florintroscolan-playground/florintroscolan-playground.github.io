@@ -217,15 +217,178 @@
     });
   }
 
-  /* 5. Hero demo ---------------------------------------------------------- */
+  /* 5. Hero demo -------------------------------------------------------- */
 
-  /** Pause the looping hero demo while it is off screen. */
+  /**
+   * A short design session on loop: Florin selects a block and widens it, the client drops in,
+   * types, and leaves a few comments. Cursor paths are gently curved, timings vary a little on
+   * every loop, and the loop pauses while the demo is off screen. The markup is the final frame,
+   * so with reduced motion (or without JS) nothing moves.
+   */
   function initHeroDemo() {
     const demo = document.querySelector('.demo');
-    if (!demo || !('IntersectionObserver' in window)) return;
+    if (!demo || reduceMotion || !window.matchMedia('(min-width: 768px)').matches) return;
+
+    const q = (sel) => demo.querySelector(sel);
+    const florin = q('.demo-lf');
+    const client = q('.demo-lc');
+    const sel = q('.demo-sel');
+    const target = q('.demo-target');
+    const dim = q('.demo-dim');
+    const bubble = q('.demo-bubble');
+    const msg = q('.demo-msg');
+    const messages = ['Looks great!', 'Love the flow.', 'Can we make it pop?', 'Approved.', 'Ship it.'];
+
+    // clock that stops while the demo is off screen
+    let paused = false;
+    let now = 0;
+    let last = performance.now();
+    const waiting = new Set();
+    const tick = (t) => {
+      if (!paused) now += Math.min(t - last, 64);
+      last = t;
+      waiting.forEach((w) => w());
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
     new IntersectionObserver((entries) => {
-      entries.forEach((entry) => demo.classList.toggle('is-paused', !entry.isIntersecting));
+      paused = !entries[0].isIntersecting;
     }).observe(demo);
+
+    /** Slight random variation so the loop does not feel mechanical. */
+    const vary = (ms) => ms * (0.88 + Math.random() * 0.24);
+    const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
+    const easeOut = (t) => 1 - (1 - t) ** 3;
+    /** Ease out with a small overshoot, then settle. */
+    const easeBack = (t) => 1 + 2.2 * (t - 1) ** 3 + 1.2 * (t - 1) ** 2;
+
+    /**
+     * Run fn(progress) for ms milliseconds of demo time.
+     * @param {number} ms
+     * @param {(p: number) => void} fn
+     * @param {(t: number) => number} [ease]
+     * @returns {Promise<void>}
+     */
+    const tween = (ms, fn, ease = easeInOut) => new Promise((resolve) => {
+      const start = now;
+      const step = () => {
+        const p = Math.min(1, (now - start) / ms);
+        fn(ease(p));
+        if (p >= 1) {
+          waiting.delete(step);
+          resolve();
+        }
+      };
+      waiting.add(step);
+    });
+    const wait = (ms) => tween(ms, () => {});
+
+    /**
+     * Move a cursor layer along a quadratic curve between two points (in % of the canvas).
+     * @param {HTMLElement} el
+     * @param {number[]} from
+     * @param {number[]} to
+     * @param {number} ms
+     * @param {number} [bend=0.18]
+     */
+    const glide = (el, from, to, ms, bend = 0.18) => {
+      const [x0, y0] = from;
+      const [x1, y1] = to;
+      const cx = (x0 + x1) / 2 - (y1 - y0) * bend;
+      const cy = (y0 + y1) / 2 + (x1 - x0) * bend;
+      return tween(ms, (p) => {
+        const a = (1 - p) ** 2;
+        const b = 2 * (1 - p) * p;
+        const c = p * p;
+        el.style.transform = `translate(${a * x0 + b * cx + c * x1}%, ${a * y0 + b * cy + c * y1}%)`;
+      });
+    };
+    const fade = (el, to, ms) => {
+      const from = Number(getComputedStyle(el).opacity);
+      return tween(ms, (p) => {
+        el.style.opacity = String(from + (to - from) * p);
+      }, easeOut);
+    };
+    /** Selection and block grow together; the size label follows. */
+    const resize = (fromW, toW, ms, ease) => tween(ms, (p) => {
+      const w = fromW + (toW - fromW) * p;
+      target.style.width = `${w}%`;
+      sel.style.width = `${w + 1.2}%`;
+      dim.textContent = `${Math.round((w / 36) * 320)} × 96`;
+    }, ease);
+
+    /** @param {string} text */
+    const say = async (text) => {
+      await tween(160, (p) => {
+        msg.style.opacity = String(1 - p);
+        msg.style.transform = `translateY(${-4 * p}px)`;
+      }, easeOut);
+      msg.textContent = text;
+      await tween(240, (p) => {
+        msg.style.opacity = String(p);
+        msg.style.transform = `translateY(${4 * (1 - p)}px)`;
+      }, easeOut);
+    };
+
+    const reset = () => {
+      florin.style.cssText = 'opacity: 0; transform: translate(96%, 98%)';
+      client.style.cssText = 'opacity: 0; transform: translate(104%, 4%)';
+      sel.style.cssText = 'opacity: 0';
+      bubble.style.cssText = 'opacity: 0; transform: scale(.92)';
+      target.style.width = '36%';
+      dim.textContent = '320 × 96';
+    };
+
+    const loop = async () => {
+      for (;;) {
+        reset();
+        await wait(vary(500));
+        fade(florin, 1, 300);
+        await glide(florin, [96, 98], [38, 61], vary(1150), 0.22);
+        await wait(vary(220));
+        // select: appears with a small overshoot, then settles
+        sel.style.width = '37.2%';
+        await tween(420, (p) => {
+          sel.style.opacity = String(Math.min(1, p * 1.6));
+          sel.style.transform = `scale(${0.96 + 0.04 * p})`;
+        }, easeBack);
+        await wait(vary(260));
+        await glide(florin, [38, 61], [56.8, 68.8], vary(700), -0.12);
+        await wait(vary(180));
+        await Promise.all([
+          glide(florin, [56.8, 68.8], [72.8, 68.8], vary(1050), 0.04),
+          resize(36, 52, 1050, easeInOut),
+        ]);
+        await resize(52, 52.8, 120, easeOut);        // overshoot on release
+        await resize(52.8, 52, 220, easeOut);        // and settle
+        glide(florin, [72.8, 68.8], [74, 80], vary(1300), 0.3);
+        await wait(vary(500));
+        fade(client, 1, 350);
+        await glide(client, [104, 4], [48, 20], vary(1250), -0.2);
+        bubble.classList.add('is-typing');
+        await tween(260, (p) => {
+          bubble.style.opacity = String(p);
+          bubble.style.transform = `scale(${0.92 + 0.08 * p})`;
+        }, easeBack);
+        await wait(vary(900));
+        bubble.classList.remove('is-typing');
+        msg.textContent = '';
+        for (const text of messages) {
+          await say(text);
+          await wait(vary(1200));
+        }
+        await Promise.all([
+          tween(300, (p) => {
+            bubble.style.opacity = String(1 - p);
+          }, easeOut),
+          glide(client, [48, 20], [102, 2], vary(900), 0.15),
+          fade(client, 0, 900),
+        ]);
+        await Promise.all([fade(florin, 0, 500), fade(sel, 0, 500), resize(52, 36, 700, easeInOut)]);
+        await wait(vary(700));
+      }
+    };
+    loop();
   }
 
   /* 6. Reveal on scroll --------------------------------------------------- */
@@ -480,6 +643,133 @@
     });
   }
 
+  /* 12. Highlighter marks ------------------------------------------------- */
+
+  /** Draw the orange highlighter swipe once, when the phrase is well inside the viewport. */
+  function initMarks() {
+    const marks = $$('.mark');
+    const drawAll = () => marks.forEach((el) => el.classList.add('is-drawn'));
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      drawAll();
+      return;
+    }
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-drawn');
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 1, rootMargin: '0px 0px -15% 0px' });
+    marks.forEach((el) => observer.observe(el));
+    window.addEventListener('beforeprint', drawAll);
+  }
+
+  /* 13. Statement scroll reveal ------------------------------------------- */
+
+  /**
+   * Words turn from grey to ink as the statement scrolls through the viewport, and back when
+   * scrolling up. One rect read per frame, only while the statement is on screen.
+   */
+  function initStatement() {
+    const text = document.querySelector('.statement-text');
+    if (!text || reduceMotion || !('IntersectionObserver' in window)) return;
+
+    /** Wrap each word of a text node in span.w (no-break spaces keep their words together). */
+    const split = (node) => {
+      const parts = node.textContent.split(/([ \t\n]+)/);
+      const frag = document.createDocumentFragment();
+      parts.forEach((part) => {
+        if (!part) return;
+        if (/^[ \t\n]+$/.test(part)) {
+          frag.appendChild(document.createTextNode(part));
+          return;
+        }
+        const word = document.createElement('span');
+        word.className = 'w';
+        word.textContent = part;
+        frag.appendChild(word);
+      });
+      node.replaceWith(frag);
+    };
+    const walker = document.createTreeWalker(text, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(split);
+
+    const words = $$('.w', text);
+    text.classList.add('is-split');
+    let lit = 0;
+    const update = () => {
+      const rect = text.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const start = vh * 0.85;
+      const end = vh * 0.4;
+      const progress = Math.min(1, Math.max(0, (start - rect.top) / (start - end + rect.height * 0.6)));
+      const next = Math.round(progress * words.length);
+      if (next === lit) return;
+      const from = Math.min(lit, next);
+      const to = Math.max(lit, next);
+      for (let i = from; i < to; i += 1) words[i].classList.toggle('is-on', i < next);
+      lit = next;
+    };
+    const onScroll = onFrame(update);
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.some((entry) => entry.isIntersecting);
+      if (visible) {
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll, { passive: true });
+        onScroll();
+      } else {
+        window.removeEventListener('scroll', onScroll);
+        window.removeEventListener('resize', onScroll);
+        onScroll();
+      }
+    }, { rootMargin: '10% 0px' });
+    observer.observe(text);
+    window.addEventListener('beforeprint', () => words.forEach((w) => w.classList.add('is-on')));
+  }
+
+  /* 14. Hello in the console ---------------------------------------------- */
+
+  /** One friendly line for whoever opens the developer tools. */
+  function initConsoleHello() {
+    const accent = 'color:#FF5A1F;font-weight:600';
+    // eslint-disable-next-line no-console -- a single deliberate greeting, not debug output
+    console.log('%cHi there.%c Like what you see under the hood? %cflorin.troscolan@gmail.com', accent, 'color:inherit', accent);
+  }
+
+  /* 15. Read depth (Umami) ------------------------------------------------ */
+
+  /**
+   * On case pages, Small Bites and How I work, report once per view when the reader reaches 50%
+   * and 90% of the main content. Invisible sentinels and IntersectionObserver, no scroll listener.
+   * Does nothing when the analytics script is blocked.
+   */
+  function initReadDepth() {
+    const main = document.querySelector('main[data-read-depth]');
+    if (!main || !('IntersectionObserver' in window)) return;
+    const page = main.dataset.readDepth;
+    if (getComputedStyle(main).position === 'static') main.style.position = 'relative';
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const depth = Number(entry.target.dataset.depth);
+        observer.unobserve(entry.target);
+        entry.target.remove();
+        if (window.umami && typeof window.umami.track === 'function') window.umami.track('Read depth', { page, depth });
+      });
+    });
+    [50, 90].forEach((depth) => {
+      const sentinel = document.createElement('div');
+      sentinel.className = 'depth-sentinel';
+      sentinel.dataset.depth = String(depth);
+      sentinel.setAttribute('aria-hidden', 'true');
+      sentinel.style.cssText = `position:absolute;left:0;top:${depth}%;width:1px;height:1px;pointer-events:none`;
+      main.appendChild(sentinel);
+      observer.observe(sentinel);
+    });
+  }
+
   initMobileNav();
   initMegaMenu();
   initBackToTop();
@@ -491,4 +781,8 @@
   initCopyEmail();
   initCursorPreview();
   initLightbox();
+  initMarks();
+  initStatement();
+  initConsoleHello();
+  initReadDepth();
 })();

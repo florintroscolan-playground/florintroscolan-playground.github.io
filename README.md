@@ -21,7 +21,7 @@ The site is plain HTML, CSS and JavaScript. Nothing is compiled or bundled: what
 │   ├── icons/                  Favicons, touch icon, logo
 │   ├── img/<page>/             Images grouped by page, each in 800, 1400 and 2000 px widths
 │   └── Florin-Troscolan-Resume.pdf
-├── site.webmanifest, robots.txt, sitemap.xml
+├── site.webmanifest, robots.txt
 └── NOTICE
 ```
 
@@ -39,6 +39,16 @@ The site is plain HTML, CSS and JavaScript. Nothing is compiled or bundled: what
 - Alt text on every image, and colour contrast that meets WCAG AA.
 - With `prefers-reduced-motion`, all animation stops and content is shown at once.
 - No single word is left alone on the last line of a text block (`text-wrap` plus a no-break space between the last two words).
+
+## SEO
+
+The site is intentionally not indexed: it is shared only in job applications. Every page, including 404, carries `<meta name="robots" content="noindex, nofollow">`. `robots.txt` still allows crawling so search engines can read that tag, and there is no sitemap or structured data. Canonical and Open Graph tags stay, so links pasted into messages still get a preview.
+
+## Analytics
+
+Umami Cloud (EU), cookieless, so there is no consent banner. No other trackers, and no personal data in events. The script only counts on the live domain (`data-domains`), and the site works the same if it is blocked.
+
+Events: `Resume download`, `Email click`, `Email copy`, `LinkedIn click`, `Dribbble click`, `Open case study`, `Open Small Bites`, `Open How I work` (click events set with `data-umami-event` attributes, with a `location` and, for case studies, a `project` property) and `Read depth` (50% and 90% on case pages, Small Bites and How I work, sent from `site.js`).
 
 ## Checks
 
