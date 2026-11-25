@@ -1,0 +1,36 @@
+/* Without JavaScript: the navigation is shown in place of the menu button, and nothing waits to be revealed. */
+.menu-btn {
+  display: none;
+}
+
+@media (width <= 899px) {
+  .topbar-in {
+    flex-wrap: wrap;
+    height: auto;
+    min-height: var(--bar-h);
+  }
+
+  .mainnav {
+    position: static;
+    display: block;
+    order: 4;
+    width: 100%;
+    border-bottom: 0;
+  }
+
+  .mainnav > ul {
+    flex-flow: row wrap;
+    padding: 0 0 8px;
+  }
+
+  .mainnav a {
+    width: auto;
+    min-height: 44px;
+    border-bottom: 0;
+    font-size: 16px;
+  }
+
+  .mainnav .mnav-projects {
+    display: none;
+  }
+}

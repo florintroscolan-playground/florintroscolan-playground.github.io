@@ -1,0 +1,20 @@
+{
+  "name": "florintroscolan-playground.github.io",
+  "private": true,
+  "description": "Portfolio of Florin Troscolan. Static site, no build step.",
+  "license": "UNLICENSED",
+  "scripts": {
+    "lint": "npm run lint:css && npm run lint:js && npm run lint:html",
+    "lint:css": "stylelint \"assets/css/**/*.css\"",
+    "lint:js": "eslint assets/js",
+    "lint:html": "java -jar node_modules/vnu-jar/build/dist/vnu.jar --skip-non-html *.html"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.14.0",
+    "eslint": "9.14.0",
+    "globals": "15.12.0",
+    "stylelint": "16.10.0",
+    "stylelint-config-standard": "36.0.1",
+    "vnu-jar": "24.10.17"
+  }
+}

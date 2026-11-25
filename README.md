@@ -1,5 +1,58 @@
 # Florin Troscolan, portfolio
 
-Live site: https://florintroscolan-playground.github.io
+Source of [florintroscolan-playground.github.io](https://florintroscolan-playground.github.io/), the portfolio of Florin Troscolan, product designer. Six case studies, a page on process and a set of shorter projects.
 
-Static HTML/CSS/JS, served by GitHub Pages from the repository root.
+The site is plain HTML, CSS and JavaScript. Nothing is compiled or bundled: what is in this repository is what GitHub Pages serves.
+
+## Structure
+
+```
+.
+├── index.html                  Home: hero, numbers, selected work
+├── financial-education.html    Case studies (six pages, same template)
+├── …
+├── process.html                How I work
+├── small-bites.html            Shorter projects and explorations
+├── 404.html
+├── assets/
+│   ├── css/site.css            One stylesheet, sectioned, with a table of contents at the top
+│   ├── js/site.js              Progressive enhancements, sectioned, no dependencies
+│   ├── fonts/                  Licensed heading font (see below)
+│   ├── icons/                  Favicons, touch icon, logo
+│   ├── img/<page>/             Images grouped by page, each in 800, 1400 and 2000 px widths
+│   └── Florin-Troscolan-Resume.pdf
+├── site.webmanifest, robots.txt, sitemap.xml
+└── NOTICE
+```
+
+## Technical choices
+
+- **No framework, no build step.** Pages are static HTML. The JavaScript adds behaviour on top (menus, scroll reveal, count-up numbers, the table of contents, the lightbox, copy-to-clipboard), and every page works without it.
+- **CSS** uses custom properties for tokens and is organised in sections: tokens, base, typography, layout, components, utilities, motion. Components use a short prefix (`.case-*`, `.mega-*`, `.timeline-*`), states use `.is-*`.
+- **Typography:** PP Neue Montreal Medium for headings, Schibsted Grotesk for text and IBM Plex Mono for labels.
+- **Images** are WebP with `srcset` and `sizes`, so phones load the 800 px versions. Every image has `width` and `height` set, and only the first image on a page loads eagerly.
+
+## Accessibility
+
+- Semantic landmarks, one `h1` per page and a skip link.
+- Visible focus states, and full keyboard support for the navigation and the work menu (arrow keys, Tab, Escape).
+- Alt text on every image, and colour contrast that meets WCAG AA.
+- With `prefers-reduced-motion`, all animation stops and content is shown at once.
+- No single word is left alone on the last line of a text block (`text-wrap` plus a no-break space between the last two words).
+
+## Checks
+
+```
+npm install
+npm run lint      # stylelint (stylelint-config-standard), eslint (recommended), Nu HTML Checker
+```
+
+`no-descending-specificity` is turned off in the stylelint config. It reports selectors from unrelated components that never style the same element.
+
+## Rights
+
+© Florin Troscolan, all rights reserved. Content and images may not be reused. The code is public so the site can be served and read. It is not open source. See `NOTICE`.
+
+The heading font, PP Neue Montreal, is licensed from Pangram Pangram Foundry for use on this website only. The font file in `assets/fonts/` must not be copied, reused or redistributed.
+
+Client work is shown with client names and brand marks removed.
