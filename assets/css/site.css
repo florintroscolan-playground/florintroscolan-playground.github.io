@@ -85,7 +85,13 @@
 }
 
 .is-case-v2 {
-  --v2-gap: 96px;
+  --v2-gap: 72px;
+}
+
+@media (width >= 640px) {
+  .is-case-v2 {
+    --v2-gap: 112px;
+  }
 }
 
 @media (width >= 1024px) {
@@ -1222,6 +1228,10 @@ p.lead + p.lead {
   color: var(--ink);
 }
 
+.work-row a:hover .type-tag {
+  background: var(--surface);
+}
+
 .work-row .arrow {
   justify-self: end;
   font-size: 22px;
@@ -1237,16 +1247,73 @@ p.lead + p.lead {
   top: 0;
   z-index: 40;
   display: none;
+  overflow: hidden;
   width: 320px;
   height: 200px;
-  object-fit: cover;
-  object-position: top;
   border-radius: 10px;
+  background: var(--panel);
   box-shadow: 0 18px 40px rgb(0 0 0 / 18%);
   opacity: 0;
   scale: .96;
   transition: opacity .3s ease-in-out, scale .3s ease-in-out;
   pointer-events: none;
+}
+
+/* Two stacked layers cross-fade; the incoming one settles from 1.03 to 1 */
+.cp-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  opacity: 0;
+  scale: 1.03;
+  transition: opacity .5s ease, scale 1.6s cubic-bezier(.2, .7, .2, 1);
+}
+
+.cp-layer.is-front {
+  opacity: 1;
+  scale: 1;
+}
+
+/* One bar per image, filling in orange while that image is shown */
+.cp-bars {
+  position: absolute;
+  inset: auto 10px 10px;
+  display: flex;
+  gap: 4px;
+}
+
+.cp-bars[hidden] {
+  display: none;
+}
+
+.cp-bar {
+  flex: 1;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgb(255 255 255 / 55%);
+  box-shadow: 0 0 0 .5px rgb(0 0 0 / 12%);
+}
+
+.cp-bar::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--orange);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+
+.cp-bar.is-done::after {
+  transform: none;
+}
+
+.cp-bar.is-run::after {
+  animation: cp-fill 1.6s linear forwards;
 }
 
 @media (hover: hover) and (pointer: fine) and (width >= 1024px) {
@@ -1336,7 +1403,7 @@ p.lead + p.lead {
 /* Statement between Selected work and Also in this portfolio. Words light up with scroll (site.js);
    without JS or with reduced motion the text is plain ink. */
 .statement {
-  padding-block: clamp(64px, 10vw, 160px);
+  padding-block: clamp(40px, 10vw, 160px);
 }
 
 .statement-text {
@@ -1461,7 +1528,7 @@ p.lead + p.lead {
   }
 
   .stats .mono {
-    font-size: 10px;
+    font-size: 11px;
     letter-spacing: .02em;
   }
 
@@ -3443,7 +3510,9 @@ img.is-crop {
 }
 
 .case-cover-img img {
+  display: block;
   width: 100%;
+  margin-inline: auto;
   max-height: 86vh;
   object-fit: cover;
   object-position: top;
@@ -3493,10 +3562,6 @@ img.is-crop {
   .js .rv {
     opacity: 1;
     transform: none;
-  }
-
-  .cursor-preview {
-    display: none !important;
   }
 
 }
@@ -3561,11 +3626,187 @@ img.is-crop {
   }
 }
 
-/* Aspect-ratio frames for cropped screenshots */
-
-.ratio-10x13 {
-  aspect-ratio: 10 / 13;
+/* Labels are not controls: tags read as flat tinted labels, only linked chips keep an outline */
+.chip:not(.chip-link) {
+  min-height: 0;
+  padding: 4px 8px;
+  border: 0;
+  border-radius: 4px;
+  background: #ECECEA;
+  color: var(--ink);
 }
+
+.chip-o:not(.chip-link) {
+  background: var(--orange);
+}
+
+.case-cover .chips .chip:not(.chip-o, .chip-link) {
+  background: rgb(255 255 255 / 9%);
+  color: var(--muted-d);
+}
+
+/* Mobile craft (phones and tablets): clear tap cues, delimited items, 16px body text, 44px targets */
+@media (width <= 1023px) {
+  /* Selected work: one card per project, image on top, then title, labels and year */
+  .work-list {
+    display: grid;
+    gap: 16px;
+  }
+
+  .work-row {
+    border-bottom: 0;
+  }
+
+  .work-row a {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-areas: "thumb thumb thumb" "title title arrow" "market year year" "type type type";
+    align-content: start;
+    gap: 10px 16px;
+    height: 100%;
+    padding: 0 16px 20px;
+    overflow: hidden;
+    border: 1px solid var(--line-l);
+    border-radius: 16px;
+    background: var(--surface);
+    transition: scale .15s ease, background-color .15s ease;
+  }
+
+  .work-row .work-thumb {
+    margin: 0 -16px 6px;
+  }
+
+  .work-row .work-thumb img {
+    border-radius: 0;
+  }
+
+  .work-row .arrow {
+    display: block;
+    grid-area: arrow;
+    align-self: start;
+    font-size: 22px;
+    line-height: 1.2;
+  }
+
+  .work-market {
+    align-self: center;
+  }
+
+  .work-row .work-year {
+    place-self: center end;
+    padding-top: 0;
+  }
+
+  .work-row .work-type {
+    justify-self: start;
+  }
+
+  .work-desc {
+    font-size: 16px;
+    text-wrap: pretty;
+  }
+
+  .work-row a:active,
+  .also-card:active,
+  .next-card:active {
+    background: var(--panel);
+    scale: .98;
+  }
+
+  .also-card,
+  .next-card {
+    border: 1px solid var(--line-l);
+    transition: scale .15s ease, background-color .15s ease;
+  }
+
+  /* Body text never under 16px on small screens */
+  .case-note,
+  .fig figcaption .cap-text,
+  .case-fig .cap-text,
+  .bite-txt .body {
+    font-size: 16px;
+  }
+
+  /* Comfortable targets */
+  .avail-pill {
+    min-height: 44px;
+  }
+
+  .drib-more,
+  .seen-in a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  /* Overview reads as one column, full width */
+  .case-glance {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+
+  .case-glance-item .body-l {
+    max-width: 60ch;
+  }
+}
+
+@media (width <= 899px) {
+  /* Menu: chevrons say "this goes somewhere", the current page is marked, presses give feedback */
+  .mainnav.is-open {
+    box-shadow: 0 24px 40px -24px rgb(0 0 0 / 35%);
+  }
+
+  .mainnav a {
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .mainnav > ul > li > a::after {
+    content: "\203A";
+    color: var(--muted-l);
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  .mainnav a:active,
+  .mnav-projects a:active {
+    background: var(--panel);
+  }
+
+  .mnav-projects a[aria-current] {
+    box-shadow: inset 3px 0 0 var(--orange);
+    font-weight: 500;
+  }
+
+  .mnav-projects a {
+    padding-left: 8px;
+  }
+}
+
+@media (width >= 640px) and (width <= 1023px) {
+  .case-process {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .t-hero {
+    max-width: 22ch;
+  }
+
+  .work-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .work-row a {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-areas: "thumb thumb thumb" "title title arrow" "market year year" "type type type";
+    column-gap: 16px;
+  }
+
+  .work-row .work-thumb {
+    margin-top: 0;
+  }
+}
+
+/* Aspect-ratio frames for cropped screenshots */
 
 .ratio-16x9 {
   aspect-ratio: 16 / 9;
@@ -3579,6 +3820,25 @@ img.is-crop {
   aspect-ratio: 8 / 5;
 }
 
+.w-cap-1320 {
+  max-width: 1320px;
+}
+
+.w-cap-1366 {
+  max-width: 1366px;
+}
+
+.w-cap-1440 {
+  max-width: 1440px;
+}
+
+.w-cap-1920 {
+  max-width: 1920px;
+}
+
+.w-cap-2000 {
+  max-width: 2000px;
+}
 
 
 
@@ -3587,6 +3847,13 @@ img.is-crop {
 
 
 
+
+
+@keyframes cp-fill {
+  to {
+    transform: none;
+  }
+}
 
 @keyframes caret-blink {
   50% {

@@ -553,61 +553,159 @@
 
   /* 10. Work list cursor preview ------------------------------------------ */
 
-  /** A small image that follows the cursor over the work list (fine pointers, wide screens). */
+  /**
+   * Hover preview on the work list (fine pointers, wide screens): a card that follows the cursor and plays
+   * the project's four screens, cross-fading every 1.6 s with a segmented orange progress bar. It restarts at
+   * the first screen on every hover and stops when the pointer leaves. Keyboard focus and reduced motion show
+   * the cover only. Touch devices keep the inline cover in each row.
+   */
   function initCursorPreview() {
     const list = document.querySelector('.work');
     const fine = window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 1024px)');
     if (!list) return;
-    const preview = Object.assign(new Image(320, 200), { className: 'cursor-preview', alt: '' });
-    preview.setAttribute('aria-hidden', 'true');
-    list.append(preview);
-    if (reduceMotion) return;
+    const rows = $$('.work-row a[data-cover]');
+    const hiDpi = window.devicePixelRatio > 1.5;
+    /** "small large" -> the URL for this screen density. */
+    const pick = (pair) => {
+      const [small, large] = pair.trim().split(/\s+/);
+      return hiDpi && large ? large : small;
+    };
+    const slidesOf = (row) => (row.dataset.slides || '').split('|').filter(Boolean).map(pick);
 
-    const rows = $$('.work-row a');
+    const card = document.createElement('div');
+    card.className = 'cursor-preview';
+    card.setAttribute('aria-hidden', 'true');
+    const layers = [0, 1].map(() => {
+      const img = new Image(320, 200);
+      img.className = 'cp-layer';
+      img.alt = '';
+      img.decoding = 'async';
+      card.append(img);
+      return img;
+    });
+    const bars = document.createElement('div');
+    bars.className = 'cp-bars';
+    card.append(bars);
+    list.append(card);
+
+    let front = 0;
+    let slides = [];
+    let index = 0;
+    let timer = 0;
+    let token = 0;
+
+    /** Put src on the hidden layer and bring it to the front once it has decoded. */
+    const show = (src, instant) => {
+      const run = ++token;
+      const next = layers[1 - front];
+      next.src = src;
+      const swap = () => {
+        if (run !== token) return;
+        if (instant) next.style.transition = 'none';
+        next.classList.add('is-front');
+        layers[front].classList.remove('is-front');
+        front = 1 - front;
+        if (instant) requestAnimationFrame(() => { next.style.transition = ''; });
+      };
+      (next.decode ? next.decode() : Promise.resolve()).then(swap, swap);
+    };
+    const setBars = (count) => {
+      bars.hidden = count < 2;
+      bars.replaceChildren(...Array.from({ length: count }, () => {
+        const bar = document.createElement('span');
+        bar.className = 'cp-bar';
+        return bar;
+      }));
+    };
+    const markBars = () => {
+      Array.from(bars.children).forEach((bar, i) => {
+        bar.classList.remove('is-run');
+        bar.classList.toggle('is-done', i < index);
+      });
+      const current = bars.children[index];
+      if (current) {
+        void current.offsetWidth;            // restart the fill animation
+        current.classList.add('is-run');
+      }
+    };
+    const stop = () => {
+      window.clearTimeout(timer);
+      timer = 0;
+    };
+    const step = () => {
+      index = (index + 1) % slides.length;
+      show(slides[index]);
+      markBars();
+      if (slides[index + 1]) new Image().src = slides[index + 1];
+      timer = window.setTimeout(step, 1600);
+    };
+    /** Start on a row: the carousel for a hover, the cover alone for focus or reduced motion. */
+    const start = (row, still) => {
+      stop();
+      slides = still || reduceMotion ? [pick(row.dataset.cover)] : slidesOf(row);
+      if (!slides.length) slides = [pick(row.dataset.cover)];
+      index = 0;
+      layers.forEach((layer) => layer.classList.remove('is-front'));
+      show(slides[0], true);
+      setBars(slides.length);
+      markBars();
+      card.classList.add('is-on');
+      if (slides.length > 1) {
+        new Image().src = slides[1];
+        timer = window.setTimeout(step, 1600);
+      }
+    };
+    const hide = () => {
+      stop();
+      token += 1;
+      card.classList.remove('is-on');
+    };
+
     let targetX = 0;
     let targetY = 0;
     let x = 0;
     let y = 0;
     let frame = null;
     let hovering = false;
-
+    const place = (left, top) => {
+      card.style.transform = `translate3d(${left}px, ${top}px, 0)`;
+    };
     const follow = () => {
-      x += (targetX - x) * 0.18;
-      y += (targetY - y) * 0.18;
+      x += (targetX - x) * (reduceMotion ? 1 : 0.18);
+      y += (targetY - y) * (reduceMotion ? 1 : 0.18);
       let left = x + 24;
       if (left + 320 > window.innerWidth - 16) left = x - 24 - 320;
-      const top = Math.max(72, Math.min(y - 76, window.innerHeight - 200 - 16));
-      preview.style.transform = `translate3d(${left}px, ${top}px, 0)`;
-      frame = hovering || Math.abs(targetX - x) > 0.5 ? requestAnimationFrame(follow) : null;
+      place(left, Math.max(72, Math.min(y - 76, window.innerHeight - 200 - 16)));
+      frame = hovering && Math.abs(targetX - x) + Math.abs(targetY - y) > 0.5 ? requestAnimationFrame(follow) : null;
     };
 
     rows.forEach((row) => {
       row.addEventListener('mouseenter', (event) => {
         if (!fine.matches) return;
-        preview.src = row.dataset.preview;
         hovering = true;
-        preview.classList.add('is-on');
-        if (!frame) {
-          x = targetX = event.clientX;
-          y = targetY = event.clientY;
-          frame = requestAnimationFrame(follow);
-        }
+        x = targetX = event.clientX;
+        y = targetY = event.clientY;
+        follow();
+        start(row, false);
       });
       row.addEventListener('mousemove', (event) => {
+        if (!hovering) return;
         targetX = event.clientX;
         targetY = event.clientY;
         if (!frame) frame = requestAnimationFrame(follow);
       });
       row.addEventListener('mouseleave', () => {
         hovering = false;
-        preview.classList.remove('is-on');
+        hide();
       });
-    });
-
-    const whenIdle = window.requestIdleCallback || ((fn) => setTimeout(fn, 800));
-    whenIdle(() => {
-      if (fine.matches) rows.forEach((row) => {
-        new Image().src = row.dataset.preview;
+      row.addEventListener('focus', () => {
+        if (!fine.matches || hovering || !row.matches(':focus-visible')) return;
+        const rect = row.getBoundingClientRect();
+        place(Math.min(rect.left + rect.width * 0.5, window.innerWidth - 336), Math.max(72, rect.top + rect.height / 2 - 100));
+        start(row, true);
+      });
+      row.addEventListener('blur', () => {
+        if (!hovering) hide();
       });
     });
   }
