@@ -1212,8 +1212,14 @@ p.lead + p.lead {
   font-size: 15px;
 }
 
-.work-type .chip {
-  border-color: rgb(0 0 0 / 18%);
+/* Type label: same mono text as Market, set apart only by a light fill. Not a control: no border and no
+   hover state of its own. It sits inside the row link, so it keeps the row's cursor. */
+.type-tag {
+  display: inline-block;
+  padding: 3px 7px;
+  border-radius: 4px;
+  background: #ECECEA;
+  color: var(--ink);
 }
 
 .work-row .arrow {
