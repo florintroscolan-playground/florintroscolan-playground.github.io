@@ -2261,10 +2261,13 @@ p.lead + p.lead {
 .case-cover > .wrap:first-child {
   display: grid;
   gap: clamp(18px, 2.4vw, 28px);
+  justify-items: center;
+  text-align: center;
 }
 
 .case-cover .t-display {
-  max-width: 14ch;
+  max-width: 16ch;
+  text-wrap: balance;
 }
 
 .case-summary {
@@ -3922,5 +3925,309 @@ img.is-crop {
   30% {
     opacity: 1;
     transform: translateY(-2px);
+  }
+}
+
+/* 20. Round 8: centred case heroes, five-item meta strip, glance icons, How I work stat visuals, Discover loop
+   ======================================================================== */
+
+.case-cover .case-summary {
+  max-width: 44ch;
+  text-wrap: pretty;
+}
+
+.case-cover .cover-chips,
+.case-cover .chips {
+  justify-content: center;
+}
+
+/* Client leads the strip: full row on phones and tablets, a wider first column on desktop */
+.case-meta > .meta-client {
+  grid-column: 1 / -1;
+  padding-left: 0;
+  border-left: 0;
+}
+
+@media (width <= 1023px) {
+  .case-meta > .meta-client {
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--line-d);
+  }
+
+  .case-meta > div:nth-child(even):not(.meta-client) {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .case-meta > div:nth-child(odd):not(.meta-client) {
+    padding-left: 16px;
+    border-left: 1px solid var(--line-d);
+  }
+}
+
+@media (width >= 1024px) and (width <= 1279px) {
+  .case-meta > .meta-client {
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--line-d);
+  }
+
+  .case-meta > .meta-client + div {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .case-meta > div:not(.meta-client) {
+    padding-top: 20px;
+  }
+}
+
+@media (width >= 1280px) {
+  .case-meta {
+    grid-template-columns: minmax(0, 1.5fr) repeat(4, minmax(0, 1fr));
+  }
+
+  .case-meta > .meta-client {
+    grid-column: auto;
+  }
+}
+
+/* At a glance: one line icon above each label, in ink; the label keeps the orange */
+.glance-ico {
+  display: block;
+  width: 24px;
+  height: 24px;
+  color: var(--fg);
+}
+
+.case-glance-item .glance-ico + .mono {
+  margin-top: 2px;
+}
+
+/* How I work stats: a small visual under each number */
+@media (width >= 640px) {
+  .pstats .body {
+    min-height: 2lh;
+  }
+}
+
+.pstats .pv {
+  margin-top: 4px;
+}
+
+.pv-ticks {
+  display: flex;
+  gap: 6px;
+  align-items: flex-end;
+  height: 16px;
+}
+
+.pv-ticks i,
+.pv-cells i {
+  display: block;
+  background: var(--orange);
+  transition: background-color .3s var(--ease) calc(300ms + var(--i) * 70ms);
+}
+
+.pv-ticks i {
+  width: 2px;
+  height: 16px;
+  border-radius: 1px;
+}
+
+.pv-cells {
+  display: grid;
+  grid-template-columns: repeat(7, 9px);
+  gap: 5px;
+}
+
+.pv-cells i {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  transition-delay: calc(300ms + var(--i) * 55ms);
+}
+
+.js .pstats li:not(.in) .pv-ticks i,
+.js .pstats li:not(.in) .pv-cells i {
+  background: rgb(255 255 255 / 16%);
+}
+
+.pv-thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  margin: -6px 0 -6px -6px;
+}
+
+.pv-thumb {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+}
+
+.pv-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  outline: 1px solid var(--line-d);
+  outline-offset: -1px;
+  object-fit: cover;
+  opacity: .8;
+  transition: opacity .2s, transform .25s var(--ease);
+}
+
+.pv-thumb:hover .pv-img,
+.pv-thumb:focus-visible .pv-img {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.pv-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pv-chip {
+  display: block;
+  padding: 4px 8px;
+  border: 1px solid var(--line-d);
+  border-radius: 999px;
+  color: var(--muted-d);
+  font: 500 11px/1.3 var(--mono);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.pstat-link > a {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  color: inherit;
+  text-decoration: none;
+}
+
+.pstat-link .arrow {
+  display: inline-block;
+  color: var(--orange);
+  transition: transform .25s var(--ease);
+}
+
+.pstat-link > a:hover .body,
+.pstat-link > a:focus-visible .body {
+  color: var(--fg);
+}
+
+.pstat-link > a:hover .arrow,
+.pstat-link > a:focus-visible .arrow {
+  transform: translateX(4px);
+}
+
+@media (width >= 1024px) and (width <= 1279px) {
+  .pstats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pstats li {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .pstats li:nth-child(3) {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+@media (width >= 1280px) {
+  .pstats > li {
+    padding-right: 0;
+  }
+}
+
+/* the visuals' own lists are not stat cells */
+.pstats .pv li {
+  display: block;
+  padding: 0;
+  border: 0;
+}
+
+/* "Discover" in the closing loop: hover or focus draws an orange cycle around the word */
+.egg {
+  position: relative;
+  display: inline-block;
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgb(21 21 21 / 35%);
+  text-decoration-thickness: .04em;
+  text-underline-offset: .14em;
+  transition: transform .7s cubic-bezier(.65, 0, .35, 1);
+}
+
+.egg-loop {
+  position: absolute;
+  top: -.3em;
+  left: -.3em;
+  width: calc(100% + .6em);
+  height: calc(100% + .5em);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.egg-loop path {
+  fill: none;
+  stroke: var(--orange);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 1;
+  vector-effect: non-scaling-stroke;
+  transition: stroke-dashoffset .7s cubic-bezier(.65, 0, .35, 1);
+}
+
+.egg-loop .egg-head {
+  stroke-dasharray: none;
+  stroke-dashoffset: 0;
+  opacity: 0;
+  transition: opacity .12s;
+}
+
+.egg:hover,
+.egg:focus-visible {
+  text-decoration-color: transparent;
+  transform: translateY(-.03em) rotate(-2deg);
+}
+
+.egg:hover .egg-loop path,
+.egg:focus-visible .egg-loop path {
+  stroke-dashoffset: 0;
+}
+
+.egg:hover .egg-loop .egg-head,
+.egg:focus-visible .egg-loop .egg-head {
+  opacity: 1;
+  transition: opacity .15s .6s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pv-ticks i,
+  .pv-cells i,
+  .pv-img,
+  .pstat-link .arrow,
+  .egg,
+  .egg-loop path,
+  .egg-loop .egg-head {
+    transition: none !important;
+  }
+
+  .js .pstats li:not(.in) .pv-ticks i,
+  .js .pstats li:not(.in) .pv-cells i {
+    background: var(--orange);
+  }
+
+  .egg:hover,
+  .egg:focus-visible {
+    transform: none;
   }
 }

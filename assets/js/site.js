@@ -439,12 +439,16 @@
       };
       requestAnimationFrame(step);
     };
+    const checked = new WeakSet();
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
+        const onLoad = !checked.has(entry.target);
+        checked.add(entry.target);
         if (!entry.isIntersecting) return;
         observer.unobserve(entry.target);
-        // only when it scrolls in from below; a number already in view keeps its value
-        if (entry.boundingClientRect.top > window.innerHeight * 0.5) run(entry.target);
+        // in view as the page opens (it counts in with the reveal), or scrolling in from below;
+        // a number met mid-page from above keeps its value
+        if (onLoad || entry.boundingClientRect.top > window.innerHeight * 0.5) run(entry.target);
       });
     }, { threshold: 0.6 });
     numbers.forEach((el) => observer.observe(el));
