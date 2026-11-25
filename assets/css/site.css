@@ -1396,8 +1396,8 @@ p.lead + p.lead {
   }
 
   .stats .mono {
-    font-size: 11px;
-    letter-spacing: .04em;
+    font-size: 10px;
+    letter-spacing: .02em;
   }
 
   .stats .stat-row li {
@@ -1499,6 +1499,13 @@ p.lead + p.lead {
 
 .stats .num-lg {
   font-size: clamp(28px, 2.6vw, 36px);
+}
+
+.stats .stat-row li,
+.stats .stat-row li + li {
+  justify-items: center;
+  padding-inline: clamp(8px, 2vw, 24px);
+  text-align: center;
 }
 
 /* 9. Hero demo: live design session
