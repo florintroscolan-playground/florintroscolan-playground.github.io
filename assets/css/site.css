@@ -2774,15 +2774,43 @@ figcaption .zoom-hint {
 }
 
 .is-process .principle {
+  --fs: clamp(24px, 2.4vw, 32px);
+
+  grid-template-columns: 4ch minmax(0, 1fr);
+  column-gap: 24px;
   padding-block: clamp(32px, 5vw, 64px);
   border-top: 1px solid var(--line-l);
 }
 
+/* Numbered like the case-page lists: mono orange 01-04 in its own column, cap-aligned with the title.
+   Offset = title cap top (.216 of its size at line-height 1.15) minus the number's own cap top (5.1px). */
+.principle-n {
+  grid-row: 1 / span 2;
+  align-self: start;
+  margin-top: calc(var(--fs) * .216 - 5.1px);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.principle > .t-h3b,
+.principle > .body {
+  grid-column: 2;
+}
+
 @media (width >= 1024px) {
   .is-process .principle {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    column-gap: 64px;
+    grid-template-columns: 6ch minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 48px;
     align-items: baseline;
+  }
+
+  .principle-n {
+    grid-row: 1;
+  }
+
+  .principle > .body {
+    grid-column: 3;
+    grid-row: 1;
   }
 }
 
