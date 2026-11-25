@@ -1522,9 +1522,20 @@ p.lead + p.lead {
   border-left: 1px solid var(--line);
 }
 
+/* Line break used only on phones (two-line stat labels); hidden from 640 px */
+@media (width >= 640px) {
+  .m-br {
+    display: none;
+  }
+}
+
 @media (width <= 639px) {
   .stats .num-lg {
     font-size: 30px;
+  }
+
+  .stats .stat-label {
+    white-space: nowrap;
   }
 
   .stats .mono {
@@ -3791,14 +3802,24 @@ img.is-crop {
     max-width: 22ch;
   }
 
+  /* Two cards per row share their row tracks (subgrid), so titles, labels and tags line up across the pair */
   .work-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 0;
+  }
+
+  .work-row {
+    display: grid;
+    grid-row: span 4;
+    grid-template-rows: subgrid;
+    margin-bottom: 16px;
   }
 
   .work-row a {
-    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-row: span 4;
+    grid-template: subgrid / minmax(0, 1fr) auto auto;
     grid-template-areas: "thumb thumb thumb" "title title arrow" "market year year" "type type type";
-    column-gap: 16px;
+    gap: 10px 16px;
   }
 
   .work-row .work-thumb {
