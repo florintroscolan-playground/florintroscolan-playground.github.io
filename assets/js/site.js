@@ -942,6 +942,26 @@
     document.addEventListener('visibilitychange', sync);
   }
 
+  /* Loop links ------------------------------------------------------------ */
+
+  /**
+   * The orange loop around "Discover" and "together". Its stroke keeps a constant width (non-scaling-stroke),
+   * so the dash is measured in screen pixels: set it from the drawn size, and again when that changes.
+   */
+  function initLoopLinks() {
+    const paths = $$('.egg-loop .egg-path');
+    if (!paths.length) return;
+    const measure = () => paths.forEach((path) => {
+      const box = path.ownerSVGElement.getBoundingClientRect();
+      if (!box.width) return;
+      const scale = (box.width / 300 + box.height / 100) / 2;
+      path.style.setProperty('--egg-len', `${Math.ceil(path.getTotalLength() * scale * 1.06)}px`);
+    });
+    measure();
+    window.addEventListener('resize', measure, { passive: true });
+    if (document.fonts) document.fonts.ready.then(measure);
+  }
+
   initMobileNav();
   initMegaMenu();
   initBackToTop();
@@ -958,4 +978,5 @@
   initConsoleHello();
   initReadDepth();
   initHeroType();
+  initLoopLinks();
 })();

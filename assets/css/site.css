@@ -4171,7 +4171,6 @@ img.is-crop {
 .egg {
   position: relative;
   display: inline-block;
-  line-height: 1.05;
   transition: transform .7s cubic-bezier(.65, 0, .35, 1), background-size .25s ease-out;
 }
 
@@ -4191,17 +4190,22 @@ img.is-crop {
   stroke-width: 2.5;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-dasharray: 1 1;
-  stroke-dashoffset: 1;
   vector-effect: non-scaling-stroke;
+  opacity: 0;
+  transition: opacity .12s;
+}
+
+/* with JS the loop draws itself: site.js sets --egg-len to the loop's length on screen */
+.js .egg-loop .egg-path {
+  opacity: 1;
+  stroke-dasharray: var(--egg-len, 4000px) var(--egg-len, 4000px);
+  stroke-dashoffset: var(--egg-len, 4000px);
   transition: stroke-dashoffset .7s cubic-bezier(.65, 0, .35, 1);
 }
 
-.egg-loop .egg-head {
-  stroke-dasharray: none;
-  stroke-dashoffset: 0;
-  opacity: 0;
-  transition: opacity .12s;
+/* an atomic inline loses the "r." kerning and trailing tracking: give the width back so line breaks match plain text */
+.footer-cta .egg {
+  margin-inline-end: -.065em;
 }
 
 /* on hover the loop is the link state, so the hairline steps aside */
@@ -4213,12 +4217,16 @@ img.is-crop {
 
 .egg:hover .egg-loop path,
 .egg:focus-visible .egg-loop path {
+  opacity: 1;
+}
+
+.egg:hover .egg-loop .egg-path,
+.egg:focus-visible .egg-loop .egg-path {
   stroke-dashoffset: 0;
 }
 
-.egg:hover .egg-loop .egg-head,
-.egg:focus-visible .egg-loop .egg-head {
-  opacity: 1;
+.js .egg:hover .egg-loop .egg-head,
+.js .egg:focus-visible .egg-loop .egg-head {
   transition: opacity .15s .6s;
 }
 
