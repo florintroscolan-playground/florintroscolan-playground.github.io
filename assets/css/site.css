@@ -1058,6 +1058,46 @@ p.lead + p.lead {
   font-weight: 500;
 }
 
+/* Typewriter domain in the home headline (site.js). The ghost holds the width of the longest word,
+   so the headline keeps its line breaks and height while words change. */
+.hero-type {
+  display: none;
+}
+
+/* Swapped from first paint (the head script sets .js), so the headline does not reflow when site.js starts */
+@media (prefers-reduced-motion: no-preference) {
+  .js .t-hero .hero-static {
+    display: none;
+  }
+
+  .js .t-hero .hero-type {
+    display: inline-grid;
+  }
+}
+
+.hero-ghost,
+.hero-live {
+  grid-area: 1 / 1;
+  white-space: nowrap;
+}
+
+.hero-ghost {
+  visibility: hidden;
+}
+
+.hero-caret {
+  display: inline-block;
+  width: 2px;
+  height: .7em;
+  margin-left: .05em;
+  background: #FF5A1F;
+  animation: caret-blink 1.05s steps(1) infinite;
+}
+
+.hero-type.is-busy .hero-caret {
+  animation: none;
+}
+
 .home-hero {
   position: relative;
   display: grid;
@@ -1290,7 +1330,7 @@ p.lead + p.lead {
 /* Statement between Selected work and Also in this portfolio. Words light up with scroll (site.js);
    without JS or with reduced motion the text is plain ink. */
 .statement {
-  padding-block: clamp(96px, 14vw, 220px) clamp(48px, 8vw, 120px);
+  padding-block: clamp(64px, 10vw, 160px);
 }
 
 .statement-text {
@@ -1301,6 +1341,19 @@ p.lead + p.lead {
   line-height: 1.04;
   letter-spacing: -.03em;
   text-wrap: pretty;
+
+  /* Optical trim, so the space above and below is measured from ink, not from the line box:
+     cap height at the top, descenders at the bottom. Fallback: the measured half-leading of the
+     heading font at line-height 1.04 (.16em above the caps, .085em short of the descenders). */
+  margin-block: -.16em .085em;
+}
+
+@supports (text-box: trim-both cap alphabetic) {
+  .statement-text {
+    margin-block: 0 .25em;
+    /* stylelint-disable-next-line property-no-unknown -- CSS Inline Layout 3, newer than the linter's property list */
+    text-box: trim-both cap alphabetic;
+  }
 }
 
 .statement-text .w {
@@ -3500,6 +3553,12 @@ img.is-crop {
 
 
 
+
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
 
 @keyframes pulse {
   0% {

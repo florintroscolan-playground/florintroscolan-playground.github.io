@@ -770,6 +770,76 @@
     });
   }
 
+  /* 16. Headline typewriter ----------------------------------------------- */
+
+  /**
+   * Types, holds, deletes and cycles the domain after "for" in the home headline. Runs only while the
+   * hero is on screen and the tab is visible; no timer is left running otherwise. Without JS or with
+   * reduced motion the static list stays.
+   */
+  function initHeroType() {
+    const box = document.querySelector('.hero-type');
+    const title = box && box.closest('.t-hero');
+    if (!title || reduceMotion || !('IntersectionObserver' in window)) return;
+    const word = box.querySelector('.hero-word');
+    const words = box.dataset.words.split(',');
+
+    let index = 0;
+    let chars = words[0].length;
+    let phase = 'hold';
+    let timer = 0;
+    let onScreen = false;
+
+    const between = (min, max) => min + Math.random() * (max - min);
+    const step = () => {
+      timer = 0;
+      const target = words[index];
+      let delay;
+      if (phase === 'type') {
+        chars += 1;
+        word.textContent = target.slice(0, chars);
+        delay = between(55, 90);
+        if (chars >= target.length) {
+          phase = 'hold';
+          delay = 1600;
+        }
+      } else if (phase === 'hold') {
+        phase = 'delete';
+        delay = 35;
+      } else if (phase === 'delete') {
+        chars -= 1;
+        word.textContent = target.slice(0, chars);
+        delay = 35;
+        if (chars <= 0) {
+          phase = 'pause';
+          delay = 380;
+        }
+      } else {
+        index = (index + 1) % words.length;
+        phase = 'type';
+        delay = between(55, 90);
+      }
+      box.classList.toggle('is-busy', phase === 'type' || phase === 'delete');
+      schedule(delay);
+    };
+    const running = () => onScreen && document.visibilityState === 'visible';
+    function schedule(delay) {
+      if (running() && !timer) timer = window.setTimeout(step, delay);
+    }
+    const sync = () => {
+      if (running()) schedule(phase === 'hold' ? 1600 : 120);
+      else if (timer) {
+        window.clearTimeout(timer);
+        timer = 0;
+      }
+    };
+    new IntersectionObserver((entries) => {
+      onScreen = entries.some((entry) => entry.isIntersecting);
+      sync();
+    }).observe(title);
+    document.addEventListener('visibilitychange', sync);
+  }
+
   initMobileNav();
   initMegaMenu();
   initBackToTop();
@@ -785,4 +855,5 @@
   initStatement();
   initConsoleHello();
   initReadDepth();
+  initHeroType();
 })();
