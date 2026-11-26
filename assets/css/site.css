@@ -4309,3 +4309,52 @@ img.is-crop {
     transform: none;
   }
 }
+
+/* 22. How I work: AI in the toolkit (2x2 on wider screens), footer credit line
+   ======================================================================== */
+
+.ai-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0 56px;
+}
+
+@media (width >= 768px) {
+  .ai-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.ai-item {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+  padding-block: clamp(28px, 4vw, 44px);
+  border-top: 1px solid var(--line-l);
+}
+
+.ai-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.ai-item .t-h3b {
+  max-width: 24ch;
+}
+
+.ai-item .body {
+  max-width: 52ch;
+}
+
+.ai-tools {
+  padding-top: 24px;
+  border-top: 1px solid var(--line-l);
+}
+
+.footer-made {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 24px;
+}
