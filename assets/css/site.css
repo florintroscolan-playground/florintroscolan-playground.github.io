@@ -1044,6 +1044,15 @@ p.lead + p.lead {
   background-size: 100% 58%;
 }
 
+/* in the scroll-revealed statement, site.js draws the mark itself once the last word is ink (no CSS transition) */
+.js .statement-text .mark {
+  transition: none;
+}
+
+.js .statement-text .mark.is-split-line {
+  box-decoration-break: slice;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .js .mark {
     background-size: 100% 58%;
@@ -4747,76 +4756,94 @@ img.is-crop {
   }
 }
 
-/* Custom cursors (make_cursors.py): an ink arrow with a white outline, and a small orange badge that names what a
-   click does. Fine pointers only; touch, forced colours and high contrast keep the system cursors. No JS. */
+/* Custom cursors (make_cursors.py): an ink arrowhead with a white outline, and a 14px orange badge that names what
+   a click does. PNGs drawn per scale (1x, 2x, 3x) come first; the 1x SVG and the keyword are fallbacks. Fine pointers
+   only; touch, forced colours and high contrast keep the system cursors. No JS. */
+/* stylelint-disable value-no-vendor-prefix -- the cursor image-set needs its -webkit- form for Safari (requested) */
 @media (hover: hover) and (pointer: fine) and (forced-colors: none) and (not (prefers-contrast: more)) {
   html {
     cursor: url("../icons/cursors/default.svg") 3 3, default;
-    cursor: image-set(url("../icons/cursors/default.png") 1x, url("../icons/cursors/default@2x.png") 2x) 3 3, default;
+    cursor: -webkit-image-set(url("../icons/cursors/default.png") 1x, url("../icons/cursors/default@2x.png") 2x, url("../icons/cursors/default@3x.png") 3x) 3 3, url("../icons/cursors/default.png") 3 3, default;
+    cursor: image-set(url("../icons/cursors/default.png") 1x, url("../icons/cursors/default@2x.png") 2x, url("../icons/cursors/default@3x.png") 3x) 3 3, url("../icons/cursors/default.png") 3 3, default;
   }
 
   :is(a[href], button, [role="button"], summary, label[for], select) {
     cursor: url("../icons/cursors/link.svg") 3 3, pointer;
-    cursor: image-set(url("../icons/cursors/link.png") 1x, url("../icons/cursors/link@2x.png") 2x) 3 3, pointer;
+    cursor: -webkit-image-set(url("../icons/cursors/link.png") 1x, url("../icons/cursors/link@2x.png") 2x, url("../icons/cursors/link@3x.png") 3x) 3 3, url("../icons/cursors/link.png") 3 3, pointer;
+    cursor: image-set(url("../icons/cursors/link.png") 1x, url("../icons/cursors/link@2x.png") 2x, url("../icons/cursors/link@3x.png") 3x) 3 3, url("../icons/cursors/link.png") 3 3, pointer;
   }
 
   a[href][target="_blank"] {
     cursor: url("../icons/cursors/external.svg") 3 3, pointer;
-    cursor: image-set(url("../icons/cursors/external.png") 1x, url("../icons/cursors/external@2x.png") 2x) 3 3, pointer;
+    cursor: -webkit-image-set(url("../icons/cursors/external.png") 1x, url("../icons/cursors/external@2x.png") 2x, url("../icons/cursors/external@3x.png") 3x) 3 3, url("../icons/cursors/external.png") 3 3, pointer;
+    cursor: image-set(url("../icons/cursors/external.png") 1x, url("../icons/cursors/external@2x.png") 2x, url("../icons/cursors/external@3x.png") 3x) 3 3, url("../icons/cursors/external.png") 3 3, pointer;
   }
 
   :is(a[href^="mailto:"], .copy-btn) {
     cursor: url("../icons/cursors/mail.svg") 3 3, pointer;
-    cursor: image-set(url("../icons/cursors/mail.png") 1x, url("../icons/cursors/mail@2x.png") 2x) 3 3, pointer;
+    cursor: -webkit-image-set(url("../icons/cursors/mail.png") 1x, url("../icons/cursors/mail@2x.png") 2x, url("../icons/cursors/mail@3x.png") 3x) 3 3, url("../icons/cursors/mail.png") 3 3, pointer;
+    cursor: image-set(url("../icons/cursors/mail.png") 1x, url("../icons/cursors/mail@2x.png") 2x, url("../icons/cursors/mail@3x.png") 3x) 3 3, url("../icons/cursors/mail.png") 3 3, pointer;
   }
 
   a[href][download] {
     cursor: url("../icons/cursors/download.svg") 3 3, pointer;
-    cursor: image-set(url("../icons/cursors/download.png") 1x, url("../icons/cursors/download@2x.png") 2x) 3 3, pointer;
+    cursor: -webkit-image-set(url("../icons/cursors/download.png") 1x, url("../icons/cursors/download@2x.png") 2x, url("../icons/cursors/download@3x.png") 3x) 3 3, url("../icons/cursors/download.png") 3 3, pointer;
+    cursor: image-set(url("../icons/cursors/download.png") 1x, url("../icons/cursors/download@2x.png") 2x, url("../icons/cursors/download@3x.png") 3x) 3 3, url("../icons/cursors/download.png") 3 3, pointer;
   }
 
   :is(a.brand, a[href="./"]) {
     cursor: url("../icons/cursors/home.svg") 3 3, pointer;
-    cursor: image-set(url("../icons/cursors/home.png") 1x, url("../icons/cursors/home@2x.png") 2x) 3 3, pointer;
+    cursor: -webkit-image-set(url("../icons/cursors/home.png") 1x, url("../icons/cursors/home@2x.png") 2x, url("../icons/cursors/home@3x.png") 3x) 3 3, url("../icons/cursors/home.png") 3 3, pointer;
+    cursor: image-set(url("../icons/cursors/home.png") 1x, url("../icons/cursors/home@2x.png") 2x, url("../icons/cursors/home@3x.png") 3x) 3 3, url("../icons/cursors/home.png") 3 3, pointer;
   }
 
   a.zoom {
     cursor: url("../icons/cursors/zoom.svg") 3 3, zoom-in;
-    cursor: image-set(url("../icons/cursors/zoom.png") 1x, url("../icons/cursors/zoom@2x.png") 2x) 3 3, zoom-in;
+    cursor: -webkit-image-set(url("../icons/cursors/zoom.png") 1x, url("../icons/cursors/zoom@2x.png") 2x, url("../icons/cursors/zoom@3x.png") 3x) 3 3, url("../icons/cursors/zoom.png") 3 3, zoom-in;
+    cursor: image-set(url("../icons/cursors/zoom.png") 1x, url("../icons/cursors/zoom@2x.png") 2x, url("../icons/cursors/zoom@3x.png") 3x) 3 3, url("../icons/cursors/zoom.png") 3 3, zoom-in;
   }
 
   :is(a[href], button, [role="button"], summary, label[for], select):active {
     cursor: url("../icons/cursors/link-active.svg") 3 3, pointer;
-    cursor: image-set(url("../icons/cursors/link-active.png") 1x, url("../icons/cursors/link-active@2x.png") 2x) 3 3, pointer;
+    cursor: -webkit-image-set(url("../icons/cursors/link-active.png") 1x, url("../icons/cursors/link-active@2x.png") 2x, url("../icons/cursors/link-active@3x.png") 3x) 3 3, url("../icons/cursors/link-active.png") 3 3, pointer;
+    cursor: image-set(url("../icons/cursors/link-active.png") 1x, url("../icons/cursors/link-active@2x.png") 2x, url("../icons/cursors/link-active@3x.png") 3x) 3 3, url("../icons/cursors/link-active.png") 3 3, pointer;
   }
 
   a[href][target="_blank"]:active {
     cursor: url("../icons/cursors/external-active.svg") 3 3, pointer;
-    cursor: image-set(url("../icons/cursors/external-active.png") 1x, url("../icons/cursors/external-active@2x.png") 2x) 3 3, pointer;
+    cursor: -webkit-image-set(url("../icons/cursors/external-active.png") 1x, url("../icons/cursors/external-active@2x.png") 2x, url("../icons/cursors/external-active@3x.png") 3x) 3 3, url("../icons/cursors/external-active.png") 3 3, pointer;
+    cursor: image-set(url("../icons/cursors/external-active.png") 1x, url("../icons/cursors/external-active@2x.png") 2x, url("../icons/cursors/external-active@3x.png") 3x) 3 3, url("../icons/cursors/external-active.png") 3 3, pointer;
   }
 
   :is(a[href^="mailto:"], .copy-btn):active {
     cursor: url("../icons/cursors/mail-active.svg") 3 3, pointer;
-    cursor: image-set(url("../icons/cursors/mail-active.png") 1x, url("../icons/cursors/mail-active@2x.png") 2x) 3 3, pointer;
+    cursor: -webkit-image-set(url("../icons/cursors/mail-active.png") 1x, url("../icons/cursors/mail-active@2x.png") 2x, url("../icons/cursors/mail-active@3x.png") 3x) 3 3, url("../icons/cursors/mail-active.png") 3 3, pointer;
+    cursor: image-set(url("../icons/cursors/mail-active.png") 1x, url("../icons/cursors/mail-active@2x.png") 2x, url("../icons/cursors/mail-active@3x.png") 3x) 3 3, url("../icons/cursors/mail-active.png") 3 3, pointer;
   }
 
   a[href][download]:active {
     cursor: url("../icons/cursors/download-active.svg") 3 3, pointer;
-    cursor: image-set(url("../icons/cursors/download-active.png") 1x, url("../icons/cursors/download-active@2x.png") 2x) 3 3, pointer;
+    cursor: -webkit-image-set(url("../icons/cursors/download-active.png") 1x, url("../icons/cursors/download-active@2x.png") 2x, url("../icons/cursors/download-active@3x.png") 3x) 3 3, url("../icons/cursors/download-active.png") 3 3, pointer;
+    cursor: image-set(url("../icons/cursors/download-active.png") 1x, url("../icons/cursors/download-active@2x.png") 2x, url("../icons/cursors/download-active@3x.png") 3x) 3 3, url("../icons/cursors/download-active.png") 3 3, pointer;
   }
 
   :is(a.brand, a[href="./"]):active {
     cursor: url("../icons/cursors/home-active.svg") 3 3, pointer;
-    cursor: image-set(url("../icons/cursors/home-active.png") 1x, url("../icons/cursors/home-active@2x.png") 2x) 3 3, pointer;
+    cursor: -webkit-image-set(url("../icons/cursors/home-active.png") 1x, url("../icons/cursors/home-active@2x.png") 2x, url("../icons/cursors/home-active@3x.png") 3x) 3 3, url("../icons/cursors/home-active.png") 3 3, pointer;
+    cursor: image-set(url("../icons/cursors/home-active.png") 1x, url("../icons/cursors/home-active@2x.png") 2x, url("../icons/cursors/home-active@3x.png") 3x) 3 3, url("../icons/cursors/home-active.png") 3 3, pointer;
   }
 
   a.zoom:active {
     cursor: url("../icons/cursors/zoom-active.svg") 3 3, zoom-in;
-    cursor: image-set(url("../icons/cursors/zoom-active.png") 1x, url("../icons/cursors/zoom-active@2x.png") 2x) 3 3, zoom-in;
+    cursor: -webkit-image-set(url("../icons/cursors/zoom-active.png") 1x, url("../icons/cursors/zoom-active@2x.png") 2x, url("../icons/cursors/zoom-active@3x.png") 3x) 3 3, url("../icons/cursors/zoom-active.png") 3 3, zoom-in;
+    cursor: image-set(url("../icons/cursors/zoom-active.png") 1x, url("../icons/cursors/zoom-active@2x.png") 2x, url("../icons/cursors/zoom-active@3x.png") 3x) 3 3, url("../icons/cursors/zoom-active.png") 3 3, zoom-in;
   }
 
   :is(input:not([type="button"], [type="submit"], [type="checkbox"], [type="radio"]), textarea, [contenteditable="true"]) {
     cursor: url("../icons/cursors/text.svg") 16 16, text;
-    cursor: image-set(url("../icons/cursors/text.png") 1x, url("../icons/cursors/text@2x.png") 2x) 16 16, text;
+    cursor: -webkit-image-set(url("../icons/cursors/text.png") 1x, url("../icons/cursors/text@2x.png") 2x, url("../icons/cursors/text@3x.png") 3x) 16 16, url("../icons/cursors/text.png") 16 16, text;
+    cursor: image-set(url("../icons/cursors/text.png") 1x, url("../icons/cursors/text@2x.png") 2x, url("../icons/cursors/text@3x.png") 3x) 16 16, url("../icons/cursors/text.png") 16 16, text;
   }
 }
+
+/* stylelint-enable value-no-vendor-prefix */

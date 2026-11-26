@@ -749,7 +749,8 @@
 
   /** Draw the orange highlighter swipe once, when the phrase is well inside the viewport. */
   function initMarks() {
-    const marks = $$('.mark');
+    // a mark inside the scroll-revealed statement is drawn by initStatement, after the last word reaches ink
+    const marks = $$('.mark').filter((el) => !el.closest('.statement-text'));
     const drawAll = () => marks.forEach((el) => el.classList.add('is-drawn'));
     if (reduceMotion || !('IntersectionObserver' in window)) {
       drawAll();
@@ -774,7 +775,13 @@
    */
   function initStatement() {
     const text = document.querySelector('.statement-text');
-    if (!text || reduceMotion || !('IntersectionObserver' in window)) return;
+    if (!text) return;
+    const marks = $$('.mark', text);
+    const showMarks = () => marks.forEach((el) => el.classList.add('is-drawn'));
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      showMarks();
+      return;
+    }
 
     /** Wrap each word of a text node in span.w (no-break spaces keep their words together). */
     const split = (node) => {
@@ -801,6 +808,24 @@
     const words = $$('.w', text);
     text.classList.add('is-split');
     let lit = 0;
+    let first = true;
+    let drawn = false;
+    /**
+     * The marker is the last thing to happen: once every word is ink, it is drawn left to right, once per page view.
+     * A mark that wraps is drawn as one strip (box-decoration-break: slice), so line 1 fills before line 2 and each
+     * line gets its share of the time in proportion to its width. Loading past the block shows it drawn at once.
+     */
+    const drawMarks = (animate) => {
+      drawn = true;
+      marks.forEach((el) => {
+        if (el.getClientRects().length > 1) el.classList.add('is-split-line');
+        el.classList.add('is-drawn');
+        if (animate && typeof el.animate === 'function') {
+          el.animate([{ backgroundSize: '0% 58%' }, { backgroundSize: '100% 58%' }],
+            { duration: 900, easing: 'cubic-bezier(.12, .8, .24, 1)' });
+        }
+      });
+    };
     const update = () => {
       const rect = text.getBoundingClientRect();
       const vh = window.innerHeight;
@@ -808,6 +833,8 @@
       const end = vh * 0.4;
       const progress = Math.min(1, Math.max(0, (start - rect.top) / (start - end + rect.height * 0.6)));
       const next = Math.round(progress * words.length);
+      if (!drawn && next === words.length) drawMarks(!first);
+      first = false;
       if (next === lit) return;
       const from = Math.min(lit, next);
       const to = Math.max(lit, next);
@@ -828,7 +855,10 @@
       }
     }, { rootMargin: '10% 0px' });
     observer.observe(text);
-    window.addEventListener('beforeprint', () => words.forEach((w) => w.classList.add('is-on')));
+    window.addEventListener('beforeprint', () => {
+      words.forEach((w) => w.classList.add('is-on'));
+      showMarks();
+    });
   }
 
   /* 14. Hello in the console ---------------------------------------------- */
