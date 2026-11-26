@@ -1039,6 +1039,29 @@
     window.setTimeout(() => toast.remove(), 3500);
   }
 
+  /* 18. Prototype loops on case pages -------------------------------------- */
+
+  /** Muted loops load and play only while on screen; with reduced motion (or no JS) the poster stays. */
+  function initMotion() {
+    const videos = $$('video.motion');
+    if (!videos.length || reduceMotion || !('IntersectionObserver' in window)) return;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const video = /** @type {HTMLVideoElement} */ (entry.target);
+        if (entry.isIntersecting) {
+          video.preload = 'auto';
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+    }, { threshold: 0.4 });
+    videos.forEach((video) => {
+      video.muted = true;
+      observer.observe(video);
+    });
+  }
+
   initMobileNav();
   initMegaMenu();
   initBackToTop();
@@ -1059,4 +1082,5 @@
   initScrollDepth();
   initGlanceSeen();
   initOwnerToast();
+  initMotion();
 })();

@@ -1,6 +1,6 @@
 # Florin Troscolan, portfolio
 
-Source of [florintroscolan-playground.github.io](https://florintroscolan-playground.github.io/), the portfolio of Florin Troscolan, product designer. Seven case studies, a page on process and a set of shorter projects.
+Source of [florintroscolan-playground.github.io](https://florintroscolan-playground.github.io/), the portfolio of Florin Troscolan, product designer. Eight case studies, a page on process and a set of shorter projects.
 
 The site is plain HTML, CSS and JavaScript. Nothing is compiled or bundled: what is in this repository is what GitHub Pages serves.
 
@@ -9,7 +9,7 @@ The site is plain HTML, CSS and JavaScript. Nothing is compiled or bundled: what
 ```
 .
 ├── index.html                  Home: hero, numbers, selected work
-├── financial-education.html    Case studies (seven pages, same template)
+├── financial-education.html    Case studies (eight pages, same template)
 ├── …
 ├── process.html                How I work
 ├── small-bites.html            Shorter projects and explorations
@@ -20,6 +20,7 @@ The site is plain HTML, CSS and JavaScript. Nothing is compiled or bundled: what
 │   ├── fonts/                  Licensed heading font (see below)
 │   ├── icons/                  Favicons, touch icon, logo
 │   ├── img/<page>/             Images grouped by page, each in 800, 1400 and 2000 px widths
+│   ├── video/<page>/           Short muted prototype loops (MP4) with WebP posters; they play only in view
 │   └── Florin-Troscolan-Resume.pdf
 ├── site.webmanifest, robots.txt
 └── NOTICE

@@ -843,8 +843,8 @@ p.lead + p.lead {
 
 .mega-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 28px 24px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 28px 20px;
   align-items: start;
 }
 
@@ -1241,7 +1241,7 @@ p.lead + p.lead {
 
 .work-cols {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 17ch 19ch 5ch 24px;
+  grid-template-columns: 40px minmax(0, 1fr) 17ch 19ch 5ch 24px;
   gap: 20px;
   align-items: center;
   padding: 0 12px 10px;
@@ -1250,7 +1250,7 @@ p.lead + p.lead {
 
 .work-row a {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 17ch 19ch 5ch 24px;
+  grid-template-columns: 40px minmax(0, 1fr) 17ch 19ch 5ch 24px;
   gap: 20px;
   align-items: center;
   padding: 22px 12px;
@@ -1553,14 +1553,14 @@ p.lead + p.lead {
 @media (width >= 1280px) {
   .work-cols,
   .work-row a {
-    grid-template-columns: minmax(0, 1fr) 180px 220px 64px 24px;
+    grid-template-columns: 40px minmax(0, 1fr) 180px 220px 64px 24px;
   }
 }
 
 @media (width >= 1024px) and (width <= 1279px) {
   .work-cols,
   .work-row a {
-    grid-template-columns: minmax(0, 1fr) 150px 200px 60px 20px;
+    grid-template-columns: 40px minmax(0, 1fr) 150px 200px 60px 20px;
     gap: 16px;
   }
 }
@@ -2436,7 +2436,7 @@ p.lead + p.lead {
   --fs: clamp(24px, 2.6vw, 34px);
 
   display: grid;
-  grid-template-columns: 4ch minmax(0, 1fr);
+  grid-template-columns: 40px minmax(0, 1fr);
   gap: 12px;
   column-gap: 24px;
   align-content: start;
@@ -2915,7 +2915,7 @@ figcaption .zoom-hint {
 .is-process .principle {
   --fs: clamp(24px, 2.4vw, 32px);
 
-  grid-template-columns: 4ch minmax(0, 1fr);
+  grid-template-columns: 40px minmax(0, 1fr);
   column-gap: 24px;
   padding-block: clamp(32px, 5vw, 64px);
   border-top: 1px solid var(--line-l);
@@ -4115,8 +4115,8 @@ img.is-crop {
 }
 
 .pv-thumbs {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(4, 44px);     /* eight case thumbnails: two rows of four, 44px targets */
   margin: -6px 0 -6px -6px;
 }
 
@@ -4386,10 +4386,6 @@ img.is-crop {
   border-top: 1px solid var(--line-l);
 }
 
-/* seven case thumbnails in one row: 40px steps, each link keeps a 44px target (neighbours overlap by 4px of padding) */
-.pv-thumbs li + li {
-  margin-left: -4px;
-}
 
 /* Case hero: the glance row sits under the tags, above the cover image */
 .case-cover .read-time {
@@ -4529,4 +4525,61 @@ img.is-crop {
 .work-year-word {
   font-size: 11px;
   letter-spacing: 0;
+}
+
+/* Selected work numbers: the "Four rules" style (mono, orange, 01..), in their own column, on the title's first line */
+.work-n {
+  align-self: first baseline;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.work-row .work-title {
+  align-self: first baseline;
+}
+
+@media (width <= 639px) {
+  .work-row a {
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    grid-template-areas: "thumb thumb thumb thumb" "n title title arrow" "market market year year" "type type type type";
+  }
+}
+
+@media (width >= 640px) and (width <= 1023px) {
+  .work-row a {
+    grid-template: subgrid / auto minmax(0, 1fr) auto auto;
+    grid-template-areas: "thumb thumb thumb thumb" "n title title arrow" "market market year year" "type type type type";
+  }
+}
+
+@media (width <= 1023px) {
+  .work-n {
+    grid-area: n;
+  }
+}
+
+/* Process section: up to two figures from the process itself, under the five stages */
+.case-process-figs {
+  margin-top: clamp(48px, 6vw, 88px);
+}
+
+/* Prototype loops: framed like the screenshots, poster until they play */
+.case-motion video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  background: var(--panel);
+}
+
+/* Selected work, desktop: the hover fill meets the dividers. Square ends, and the first row's fill reaches up
+   through the 8px under the header divider (a shadow, so no row height or text moves). */
+@media (width >= 1024px) {
+  .work-row a {
+    border-radius: 0;
+  }
+
+  .work-row:first-child a:hover {
+    box-shadow: 0 -8px 0 var(--panel);
+  }
 }
