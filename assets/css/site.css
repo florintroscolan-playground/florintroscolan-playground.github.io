@@ -2813,6 +2813,68 @@ figcaption .zoom-hint {
   margin-top: 20px;
 }
 
+/* Decision examples: tabs above the anatomy; every panel sits in the same grid cell, so the block takes the tallest
+   example's height and switching never moves the page. Without JS only the first panel shows, and no tabs. */
+.anatomy-tabs {
+  display: none;
+}
+
+.js .anatomy-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.anatomy-tab {
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--line-l);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--fg);
+  font: 500 12px/1.3 var(--mono);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  transition: background-color .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease);
+}
+
+.anatomy-tab:hover {
+  border-color: var(--fg);
+}
+
+.anatomy-tab[aria-selected="true"] {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: #FFF;
+}
+
+.anatomy-tab:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 2px;
+}
+
+.js .anatomy-panels {
+  display: grid;
+}
+
+.js .anatomy-panel {
+  grid-area: 1 / 1;
+}
+
+.js .anatomy-panel[hidden] {
+  display: block;
+  visibility: hidden;
+}
+
+.anatomy-panel.is-leaving {
+  pointer-events: none;
+}
+
+.anatomy-more {
+  margin-top: 12px;
+}
+
 @media (width >= 768px) {
   .pgrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -4349,6 +4411,10 @@ img.is-crop {
 }
 
 .ai-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  align-items: center;
   padding-top: 24px;
   border-top: 1px solid var(--line-l);
 }

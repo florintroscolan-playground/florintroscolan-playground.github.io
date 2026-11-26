@@ -1166,6 +1166,55 @@
    * (scale and a halo on ::after), with an orange fill along the line when the stages sit in one row, then
    * repeats only the halo ripple every 6s while visible. No arc here. Reduced motion or no JS: the static list.
    */
+  /* 22. Anatomy of a decision: tabs between real decisions -------------- */
+
+  /**
+   * Tabs with roving tabindex (arrows, Home, End). All panels share one grid cell, so the block keeps the height of
+   * the tallest example and the page never jumps. The new rows rise 6px and fade in, 40ms apart; the old panel fades
+   * out underneath. Reduced motion: an instant switch.
+   */
+  function initAnatomyTabs() {
+    const list = document.querySelector('.anatomy-tabs');
+    if (!list) return;
+    const tabs = $$('[role="tab"]', list);
+    const panelOf = (tab) => document.getElementById(tab.getAttribute('aria-controls'));
+    let current = tabs.findIndex((t) => t.getAttribute('aria-selected') === 'true');
+    const select = (i, focus) => {
+      if (i === current) return;
+      const oldPanel = panelOf(tabs[current]);
+      const newPanel = panelOf(tabs[i]);
+      tabs.forEach((t, j) => {
+        t.setAttribute('aria-selected', j === i ? 'true' : 'false');
+        t.tabIndex = j === i ? 0 : -1;
+      });
+      if (focus) tabs[i].focus();
+      current = i;
+      newPanel.hidden = false;
+      if (reduceMotion || typeof newPanel.animate !== 'function') {
+        oldPanel.hidden = true;
+        return;
+      }
+      const ease = 'cubic-bezier(.2, .7, .2, 1)';
+      oldPanel.classList.add('is-leaving');
+      oldPanel.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 220, easing: ease })
+        .finished.then(() => {
+          if (panelOf(tabs[current]) !== oldPanel) oldPanel.hidden = true;
+          oldPanel.classList.remove('is-leaving');
+        }).catch(() => {});
+      $$('.anatomy-row', newPanel).forEach((row, j) => {
+        row.animate([{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }],
+          { duration: 220, delay: j * 40, easing: ease, fill: 'backwards' });
+      });
+    };
+    tabs.forEach((tab, i) => tab.addEventListener('click', () => select(i, false)));
+    list.addEventListener('keydown', (e) => {
+      const keys = { ArrowRight: current + 1, ArrowLeft: current - 1, Home: 0, End: tabs.length - 1 };
+      if (!(e.key in keys)) return;
+      e.preventDefault();
+      select((keys[e.key] + tabs.length) % tabs.length, true);
+    });
+  }
+
   /* 21. "How it ran" hover: the CSS progress line needs all stages on one row; mark the lists where they are */
   function initStageRow() {
     const lists = $$('.case-process');
@@ -1260,4 +1309,5 @@
   initLoopPulse();
   initStagePulse();
   initStageRow();
+  initAnatomyTabs();
 })();
