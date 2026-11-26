@@ -2454,6 +2454,7 @@ p.lead + p.lead {
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
   gap: 0;
   border-top: 1px solid var(--line-l);
+  position: relative;
 }
 
 .case-process li {
@@ -2600,7 +2601,7 @@ p.lead + p.lead {
 
 .case-problems li > .case-n {
   grid-row: 1 / span 2;
-  margin-top: calc(var(--fs) * .36 - 7.5px);
+  margin-top: calc(var(--fs) * .36 - 8.5px);
   padding-top: 0;
   line-height: 1.5;
   font-size: 12px;
@@ -2660,7 +2661,7 @@ p.lead + p.lead {
 }
 
 .case-dec > .case-n {
-  margin-top: calc(var(--fs) * .335 - 8.5px);
+  margin-top: calc(var(--fs) * .335 - 8px);    /* digit tops level with the title capitals (align_audit checks within 1px) */
   padding-top: 0;
   line-height: 1.5;
   font-size: 12px;
@@ -2985,6 +2986,8 @@ figcaption .zoom-hint {
 
 .loop-dot {
   fill: var(--ink);
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
 .loop-end {
@@ -3922,6 +3925,10 @@ img.is-crop {
   max-width: 1920px;
 }
 
+.w-cap-1964 {
+  max-width: 1964px;
+}
+
 .w-cap-2000 {
   max-width: 2000px;
 }
@@ -4003,53 +4010,33 @@ img.is-crop {
   justify-content: center;
 }
 
-/* Client leads the strip: full row on phones and tablets, a wider first column on desktop */
-.case-meta > .meta-client {
-  grid-column: 1 / -1;
-  padding-left: 0;
-  border-left: 0;
+/* Four items: Client / Role / Year / Platform. Phones and tablets: Client and Role on full rows, Year and Platform
+   side by side. Desktop: four columns with dividers, each at least as wide as its value (one line), the spare
+   width shared evenly. */
+@media (width >= 1024px) {
+  .case-meta {
+    grid-template-columns: repeat(4, minmax(max-content, 1fr));
+  }
 }
 
 @media (width <= 1023px) {
-  .case-meta > .meta-client {
+  .case-meta > .meta-client,
+  .case-meta > div:nth-child(2) {
+    grid-column: 1 / -1;
+    padding-left: 0;
     padding-bottom: 18px;
+    border-left: 0;
     border-bottom: 1px solid var(--line-d);
   }
 
-  .case-meta > div:nth-child(even):not(.meta-client) {
+  .case-meta > div:nth-child(3) {
     padding-left: 0;
     border-left: 0;
   }
 
-  .case-meta > div:nth-child(odd):not(.meta-client) {
+  .case-meta > div:nth-child(4) {
     padding-left: 16px;
     border-left: 1px solid var(--line-d);
-  }
-}
-
-@media (width >= 1024px) and (width <= 1279px) {
-  .case-meta > .meta-client {
-    padding-bottom: 20px;
-    border-bottom: 1px solid var(--line-d);
-  }
-
-  .case-meta > .meta-client + div {
-    padding-left: 0;
-    border-left: 0;
-  }
-
-  .case-meta > div:not(.meta-client) {
-    padding-top: 20px;
-  }
-}
-
-@media (width >= 1280px) {
-  .case-meta {
-    grid-template-columns: minmax(0, 1.5fr) repeat(4, minmax(0, 1fr));
-  }
-
-  .case-meta > .meta-client {
-    grid-column: auto;
   }
 }
 
@@ -4387,11 +4374,20 @@ img.is-crop {
 }
 
 
-/* Case hero: the glance row sits under the tags, above the cover image */
+/* Case hero: the glance row sits under the tags, above the cover image.
+   The reading time takes the chip's own box (same padding and line height), and both line up on the first chip row,
+   so its text centre matches the chips' text centre even when the tags wrap (align_audit checks within 1px) */
+.case-cover .cover-chips {
+  align-items: flex-start;
+}
+
+.case-cover .chips > li {
+  display: flex;
+}
+
 .case-cover .read-time {
-  display: inline-flex;
-  align-items: center;
-  min-height: 30px;
+  padding-block: 4px;
+  line-height: 1.3;
   color: var(--muted-d);
 }
 
@@ -4532,6 +4528,7 @@ img.is-crop {
   align-self: first baseline;
   font-size: 12px;
   line-height: 1.5;
+  transform: translateY(calc(9px - clamp(20px, 1.8vw, 24px) * .75));    /* digit tops level with the title capitals */
 }
 
 .work-row .work-title {
@@ -4581,5 +4578,245 @@ img.is-crop {
 
   .work-row:first-child a:hover {
     box-shadow: 0 -8px 0 var(--panel);
+  }
+}
+
+/* How I work closing loop: a calm pulse (site.js). At rest, and without JS or with reduced motion, nothing here shows. */
+.loop-halo {
+  fill: var(--orange);
+  opacity: 0;
+}
+
+.loop-fill {
+  fill: none;
+  stroke: var(--orange);
+  stroke-width: 1.2;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+}
+
+/* while site.js runs the sequence it draws the arc itself, after the pulse reaches Ship */
+.js .loop-close.loop-seq .loop-arc {
+  stroke-dashoffset: 1;
+  transition: none;
+}
+
+.js .loop-close.loop-seq .loop-head {
+  opacity: 0;
+  transition: none;
+}
+
+.js .loop-close.loop-seq.loop-done .loop-arc {
+  stroke-dashoffset: 0;
+}
+
+.js .loop-close.loop-seq.loop-done .loop-head {
+  opacity: 1;
+}
+
+/* Case "How it ran" stage line: the same calm pulse (site.js); the halo and fill stay invisible at rest */
+.case-process li::after {
+  content: "";
+  position: absolute;
+  top: -9.25px;
+  left: -5.25px;
+  width: 17.5px;
+  height: 17.5px;
+  border-radius: 50%;
+  background: var(--orange);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cp-fill {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--orange);
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+  pointer-events: none;
+}
+
+@media (width <= 767px) {
+  .case-process li::after {
+    top: .75px;
+    left: -9.25px;
+  }
+}
+
+/* Case "How it ran" hover: on a fine pointer, hovering a stage (the whole column) lights its dot with the loop halo,
+   fills the timeline up to that dot, turns its number accent and lets the other notes step back.
+   Colour, opacity and transform only, so nothing moves. 220ms in, 180ms out. Touch and the vertical layout: none. */
+@media (hover: hover) and (pointer: fine) and (width >= 768px) {
+  .case-process::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--orange);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform .18s var(--ease);
+    pointer-events: none;
+  }
+
+  .case-process li::before {
+    transition: background-color .18s var(--ease), transform .18s var(--ease);
+  }
+
+  .case-process li::after {
+    transition: opacity .18s var(--ease);
+  }
+
+  .case-process li > .mono,
+  .case-process .case-note {
+    transition: color .18s var(--ease), opacity .18s var(--ease);
+  }
+
+  .case-process li:is(:hover, :focus-within)::before {
+    background: var(--orange);
+    transform: scale(1.4);
+    transition-duration: .22s;
+  }
+
+  .case-process li:is(:hover, :focus-within)::after {
+    opacity: .25;
+    transition-duration: .22s;
+  }
+
+  .case-process li:is(:hover, :focus-within) > .mono {
+    color: var(--accent-fg);
+    transition-duration: .22s;
+  }
+
+  .case-process:has(> li:is(:hover, :focus-within)) > li:not(:hover, :focus-within) .case-note {
+    opacity: .85;
+    transition-duration: .22s;
+  }
+}
+
+/* the progress line only where the five stages share one row (site.js marks the list .cp-row) */
+@media (hover: hover) and (pointer: fine) and (width >= 768px) {
+  .case-process.cp-row:has(> li:nth-child(2):is(:hover, :focus-within))::before {
+    transform: scaleX(.2);
+    transition-duration: .22s;
+  }
+
+  .case-process.cp-row:has(> li:nth-child(3):is(:hover, :focus-within))::before {
+    transform: scaleX(.4);
+    transition-duration: .22s;
+  }
+
+  .case-process.cp-row:has(> li:nth-child(4):is(:hover, :focus-within))::before {
+    transform: scaleX(.6);
+    transition-duration: .22s;
+  }
+
+  .case-process.cp-row:has(> li:nth-child(5):is(:hover, :focus-within))::before {
+    transform: scaleX(.8);
+    transition-duration: .22s;
+  }
+}
+
+/* reduced motion: an instant colour change only, no scale, halo or line */
+@media (hover: hover) and (pointer: fine) and (width >= 768px) and (prefers-reduced-motion: reduce) {
+  .case-process::before {
+    display: none;
+  }
+
+  .case-process li::before,
+  .case-process li::after,
+  .case-process li > .mono,
+  .case-process .case-note {
+    transition: none;
+  }
+
+  .case-process li:is(:hover, :focus-within)::before {
+    transform: none;
+  }
+
+  .case-process li:is(:hover, :focus-within)::after {
+    opacity: 0;
+  }
+}
+
+/* Custom cursors (make_cursors.py): an ink arrow with a white outline, and a small orange badge that names what a
+   click does. Fine pointers only; touch, forced colours and high contrast keep the system cursors. No JS. */
+@media (hover: hover) and (pointer: fine) and (forced-colors: none) and (not (prefers-contrast: more)) {
+  html {
+    cursor: url("../icons/cursors/default.svg") 3 3, default;
+    cursor: image-set(url("../icons/cursors/default.png") 1x, url("../icons/cursors/default@2x.png") 2x) 3 3, default;
+  }
+
+  :is(a[href], button, [role="button"], summary, label[for], select) {
+    cursor: url("../icons/cursors/link.svg") 3 3, pointer;
+    cursor: image-set(url("../icons/cursors/link.png") 1x, url("../icons/cursors/link@2x.png") 2x) 3 3, pointer;
+  }
+
+  a[href][target="_blank"] {
+    cursor: url("../icons/cursors/external.svg") 3 3, pointer;
+    cursor: image-set(url("../icons/cursors/external.png") 1x, url("../icons/cursors/external@2x.png") 2x) 3 3, pointer;
+  }
+
+  :is(a[href^="mailto:"], .copy-btn) {
+    cursor: url("../icons/cursors/mail.svg") 3 3, pointer;
+    cursor: image-set(url("../icons/cursors/mail.png") 1x, url("../icons/cursors/mail@2x.png") 2x) 3 3, pointer;
+  }
+
+  a[href][download] {
+    cursor: url("../icons/cursors/download.svg") 3 3, pointer;
+    cursor: image-set(url("../icons/cursors/download.png") 1x, url("../icons/cursors/download@2x.png") 2x) 3 3, pointer;
+  }
+
+  :is(a.brand, a[href="./"]) {
+    cursor: url("../icons/cursors/home.svg") 3 3, pointer;
+    cursor: image-set(url("../icons/cursors/home.png") 1x, url("../icons/cursors/home@2x.png") 2x) 3 3, pointer;
+  }
+
+  a.zoom {
+    cursor: url("../icons/cursors/zoom.svg") 3 3, zoom-in;
+    cursor: image-set(url("../icons/cursors/zoom.png") 1x, url("../icons/cursors/zoom@2x.png") 2x) 3 3, zoom-in;
+  }
+
+  :is(a[href], button, [role="button"], summary, label[for], select):active {
+    cursor: url("../icons/cursors/link-active.svg") 3 3, pointer;
+    cursor: image-set(url("../icons/cursors/link-active.png") 1x, url("../icons/cursors/link-active@2x.png") 2x) 3 3, pointer;
+  }
+
+  a[href][target="_blank"]:active {
+    cursor: url("../icons/cursors/external-active.svg") 3 3, pointer;
+    cursor: image-set(url("../icons/cursors/external-active.png") 1x, url("../icons/cursors/external-active@2x.png") 2x) 3 3, pointer;
+  }
+
+  :is(a[href^="mailto:"], .copy-btn):active {
+    cursor: url("../icons/cursors/mail-active.svg") 3 3, pointer;
+    cursor: image-set(url("../icons/cursors/mail-active.png") 1x, url("../icons/cursors/mail-active@2x.png") 2x) 3 3, pointer;
+  }
+
+  a[href][download]:active {
+    cursor: url("../icons/cursors/download-active.svg") 3 3, pointer;
+    cursor: image-set(url("../icons/cursors/download-active.png") 1x, url("../icons/cursors/download-active@2x.png") 2x) 3 3, pointer;
+  }
+
+  :is(a.brand, a[href="./"]):active {
+    cursor: url("../icons/cursors/home-active.svg") 3 3, pointer;
+    cursor: image-set(url("../icons/cursors/home-active.png") 1x, url("../icons/cursors/home-active@2x.png") 2x) 3 3, pointer;
+  }
+
+  a.zoom:active {
+    cursor: url("../icons/cursors/zoom-active.svg") 3 3, zoom-in;
+    cursor: image-set(url("../icons/cursors/zoom-active.png") 1x, url("../icons/cursors/zoom-active@2x.png") 2x) 3 3, zoom-in;
+  }
+
+  :is(input:not([type="button"], [type="submit"], [type="checkbox"], [type="radio"]), textarea, [contenteditable="true"]) {
+    cursor: url("../icons/cursors/text.svg") 16 16, text;
+    cursor: image-set(url("../icons/cursors/text.png") 1x, url("../icons/cursors/text@2x.png") 2x) 16 16, text;
   }
 }

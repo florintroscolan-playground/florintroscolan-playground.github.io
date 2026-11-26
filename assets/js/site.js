@@ -1062,6 +1062,150 @@
     });
   }
 
+  /* 19. How I work loop: a calm pulse ---------------------------------------- */
+
+  /**
+   * Once, at 50% in view: the five dots light up Discover to Ship (scale and a soft halo), an orange fill follows
+   * them along the baseline, then the arc draws from Ship back to Discover and the fill fades back to grey.
+   * After that, every 6s while visible, only the halos ripple (no scale, no fill, no arc). Reduced motion, no JS
+   * or no Web Animations: the static diagram.
+   */
+  function initLoopPulse() {
+    const close = document.querySelector('.loop-close');
+    if (!close || reduceMotion || !('IntersectionObserver' in window)) return;
+    const dots = $$('.loop-dot', close);
+    const halos = $$('.loop-halo', close);
+    const fill = close.querySelector('.loop-fill');
+    const arc = close.querySelector('.loop-arc');
+    if (!dots.length || !fill || !arc || typeof arc.animate !== 'function') return;
+    close.classList.add('loop-seq');
+    const ease = 'cubic-bezier(.2, .7, .2, 1)';
+    const DUR = 420;
+    const GAP = 140;
+    const run = DUR + GAP * (dots.length - 1);
+    let started = false;
+    let inView = false;
+    let timer = 0;
+
+    const ripple = (full) => {
+      dots.forEach((dot, i) => {
+        const timing = { duration: DUR, delay: i * GAP, easing: ease };
+        if (full) dot.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.35)' }, { transform: 'scale(1)' }], timing);
+        if (halos[i]) halos[i].animate([{ opacity: 0 }, { opacity: full ? 0.35 : 0.25 }, { opacity: 0 }], timing);
+      });
+    };
+    const entry = () => {
+      ripple(true);
+      fill.animate([{ opacity: 1, strokeDashoffset: 1 }, { opacity: 1, strokeDashoffset: 0 }],
+        { duration: run, easing: 'linear', fill: 'forwards' });
+      window.setTimeout(() => {
+        arc.animate([{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { duration: 700, easing: 'ease-in-out', fill: 'forwards' })
+          .finished.then(() => {
+            close.classList.add('loop-done');
+            arc.getAnimations().forEach((a) => a.cancel());
+            fill.getAnimations().forEach((a) => a.cancel());
+            fill.animate([{ opacity: 1, strokeDashoffset: 0 }, { opacity: 0, strokeDashoffset: 0 }], { duration: 400, easing: 'ease-out' });
+          }).catch(() => close.classList.add('loop-done'));
+      }, run);
+    };
+    const sync = () => {
+      const on = started && inView && !document.hidden;
+      if (on && !timer) timer = window.setInterval(() => ripple(false), 6000);
+      if (!on && timer) {
+        window.clearInterval(timer);
+        timer = 0;
+      }
+    };
+    new IntersectionObserver((entries) => {
+      entries.forEach((entry2) => {
+        inView = entry2.isIntersecting;
+        if (inView && !started) {
+          started = true;
+          entry();
+        }
+        sync();
+      });
+    }, { threshold: 0.5 }).observe(close.querySelector('.loop-motif') || close);
+    document.addEventListener('visibilitychange', sync);
+  }
+
+  /* 20. Case "How it ran": the same calm pulse on the stage line ---------------- */
+
+  /**
+   * The case stage list draws its dots with ::before; this pulses them Discover to Ship once at 50% in view
+   * (scale and a halo on ::after), with an orange fill along the line when the stages sit in one row, then
+   * repeats only the halo ripple every 6s while visible. No arc here. Reduced motion or no JS: the static list.
+   */
+  /* 21. "How it ran" hover: the CSS progress line needs all stages on one row; mark the lists where they are */
+  function initStageRow() {
+    const lists = $$('.case-process');
+    if (!lists.length) return;
+    const mark = () => lists.forEach((list) => {
+      const items = $$(':scope > li', list);
+      list.classList.toggle('cp-row', items.length > 1 && items.every((li) => li.offsetTop === items[0].offsetTop));
+    });
+    mark();
+    window.addEventListener('resize', mark, { passive: true });
+  }
+
+  function initStagePulse() {
+    const lists = $$('.case-process');
+    if (!lists.length || reduceMotion || !('IntersectionObserver' in window) || typeof document.body.animate !== 'function') return;
+    const ease = 'cubic-bezier(.2, .7, .2, 1)';
+    const DUR = 420;
+    const GAP = 140;
+    lists.forEach((list) => {
+      const items = $$(':scope > li', list);
+      if (items.length < 2) return;
+      let started = false;
+      let inView = false;
+      let timer = 0;
+      const ripple = (full) => {
+        items.forEach((li, i) => {
+          const timing = { duration: DUR, delay: i * GAP, easing: ease };
+          try {
+            if (full) li.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.35)' }, { transform: 'scale(1)' }], { ...timing, pseudoElement: '::before' });
+            li.animate([{ opacity: 0 }, { opacity: full ? 0.35 : 0.25 }, { opacity: 0 }], { ...timing, pseudoElement: '::after' });
+          } catch {
+            /* no pseudo-element animation in this browser: stay static */
+          }
+        });
+      };
+      const entry = () => {
+        ripple(true);
+        const oneRow = items.every((li) => li.offsetTop === items[0].offsetTop);
+        if (!oneRow) return;
+        const fill = document.createElement('span');
+        fill.className = 'cp-fill';
+        fill.setAttribute('aria-hidden', 'true');
+        list.appendChild(fill);
+        const run = DUR + GAP * (items.length - 1);
+        fill.animate([{ opacity: 1, transform: 'scaleX(0)' }, { opacity: 1, transform: 'scaleX(1)' }], { duration: run, easing: 'linear', fill: 'forwards' })
+          .finished.then(() => fill.animate([{ opacity: 1, transform: 'scaleX(1)' }, { opacity: 0, transform: 'scaleX(1)' }], { duration: 400, easing: 'ease-out', fill: 'forwards' }).finished)
+          .then(() => fill.remove()).catch(() => fill.remove());
+      };
+      const sync = () => {
+        const on = started && inView && !document.hidden;
+        if (on && !timer) timer = window.setInterval(() => ripple(false), 6000);
+        if (!on && timer) {
+          window.clearInterval(timer);
+          timer = 0;
+        }
+      };
+      new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          inView = e.isIntersecting;
+          if (inView && !started) {
+            started = true;
+            entry();
+          }
+          sync();
+        });
+      }, { threshold: 0.5 }).observe(list);
+      document.addEventListener('visibilitychange', sync);
+    });
+  }
+
   initMobileNav();
   initMegaMenu();
   initBackToTop();
@@ -1083,4 +1227,7 @@
   initGlanceSeen();
   initOwnerToast();
   initMotion();
+  initLoopPulse();
+  initStagePulse();
+  initStageRow();
 })();
