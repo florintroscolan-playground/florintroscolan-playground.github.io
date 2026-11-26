@@ -1,6 +1,6 @@
 # Florin Troscolan, portfolio
 
-Source of [florintroscolan-playground.github.io](https://florintroscolan-playground.github.io/), the portfolio of Florin Troscolan, product designer. Six case studies, a page on process and a set of shorter projects.
+Source of [florintroscolan-playground.github.io](https://florintroscolan-playground.github.io/), the portfolio of Florin Troscolan, product designer. Seven case studies, a page on process and a set of shorter projects.
 
 The site is plain HTML, CSS and JavaScript. Nothing is compiled or bundled: what is in this repository is what GitHub Pages serves.
 
@@ -9,7 +9,7 @@ The site is plain HTML, CSS and JavaScript. Nothing is compiled or bundled: what
 ```
 .
 ├── index.html                  Home: hero, numbers, selected work
-├── financial-education.html    Case studies (six pages, same template)
+├── financial-education.html    Case studies (seven pages, same template)
 ├── …
 ├── process.html                How I work
 ├── small-bites.html            Shorter projects and explorations
@@ -48,7 +48,9 @@ The site is intentionally not indexed: it is shared only in job applications. Ev
 
 Umami Cloud (EU), cookieless, so there is no consent banner. No other trackers, and no personal data in events. The script only counts on the live domain (`data-domains`), and the site works the same if it is blocked.
 
-Events: `Resume download`, `Email click`, `Email copy`, `LinkedIn click`, `Dribbble click`, `Open case study`, `Open Small Bites`, `Open How I work` (click events set with `data-umami-event` attributes, with a `location` and, for case studies, a `project` property) and `Read depth` (50% and 90% on case pages, Small Bites and How I work, sent from `site.js`).
+Events: `Resume download`, `Email click`, `Email copy`, `LinkedIn click`, `Dribbble click`, `Open case study`, `Open Small Bites`, `Open How I work` (click events set with `data-umami-event` attributes, with a `location` and, for case studies, a `project` property) `Read depth` (50% and 90% on case pages, Small Bites and How I work), `Scroll depth` (home, 25/50/75/100%, with `page` and `depth`) and `Glance seen` (case pages, once 60% of the "At a glance" row has been visible for one second, with `page`). The last three are sent from `site.js`, once per page view.
+
+**Owner opt-out.** Open any page with `?owner=1` to stop counting your own visits on that device: it sets `localStorage["umami.disabled"] = "1"`, which the Umami script honours, and shows a short "Analytics off on this device" note once. `?owner=0` removes it. Do it once per browser (and per in-app browser).
 
 ## Checks
 

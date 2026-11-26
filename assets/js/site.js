@@ -962,6 +962,83 @@
     if (document.fonts) document.fonts.ready.then(measure);
   }
 
+  /* 17. Measurement: home scroll depth, case glance seen, owner opt-out --- */
+
+  /** Send one Umami event; silent when the analytics script is blocked or switched off. */
+  const track = (name, data) => {
+    try {
+      if (window.umami && typeof window.umami.track === 'function') window.umami.track(name, data);
+    } catch {
+      /* analytics must never break the page */
+    }
+  };
+
+  /** Home: "Scroll depth" at 25/50/75/100% of the page, each once per view. */
+  function initScrollDepth() {
+    const main = document.querySelector('.is-home main');
+    if (!main || !('IntersectionObserver' in window)) return;
+    if (getComputedStyle(main).position === 'static') main.style.position = 'relative';
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        observer.unobserve(entry.target);
+        entry.target.remove();
+        track('Scroll depth', { page: 'home', depth: Number(entry.target.dataset.depth) });
+      });
+    });
+    [25, 50, 75, 100].forEach((depth) => {
+      const sentinel = document.createElement('div');
+      sentinel.className = 'depth-sentinel';
+      sentinel.dataset.depth = String(depth);
+      sentinel.setAttribute('aria-hidden', 'true');
+      const at = depth === 100 ? 'bottom:0' : `top:${depth}%`;
+      sentinel.style.cssText = `position:absolute;left:0;${at};width:1px;height:1px;pointer-events:none`;
+      main.appendChild(sentinel);
+      observer.observe(sentinel);
+    });
+  }
+
+  /** Case pages: "Glance seen" once, after 60% of the At a glance row has been visible for a full second. */
+  function initGlanceSeen() {
+    const glance = document.querySelector('[data-glance]');
+    if (!glance || !('IntersectionObserver' in window)) return;
+    let timer = 0;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          if (!timer) {
+            timer = window.setTimeout(() => {
+              observer.disconnect();
+              track('Glance seen', { page: glance.dataset.glance });
+            }, 1000);
+          }
+        } else if (timer) {
+          window.clearTimeout(timer);
+          timer = 0;
+        }
+      });
+    }, { threshold: 0.6 });
+    observer.observe(glance);
+  }
+
+  /** ?owner=1 (handled in the page head) switches analytics off on this device; say so once. */
+  function initOwnerToast() {
+    let show = false;
+    try {
+      show = sessionStorage.getItem('owner-toast') === '1';
+      if (show) sessionStorage.removeItem('owner-toast');
+    } catch {
+      return;
+    }
+    if (!show) return;
+    const toast = document.createElement('p');
+    toast.className = 'owner-toast';
+    toast.setAttribute('role', 'status');
+    toast.textContent = 'Analytics off on this device';
+    document.body.appendChild(toast);
+    window.setTimeout(() => toast.remove(), 3500);
+  }
+
   initMobileNav();
   initMegaMenu();
   initBackToTop();
@@ -979,4 +1056,7 @@
   initReadDepth();
   initHeroType();
   initLoopLinks();
+  initScrollDepth();
+  initGlanceSeen();
+  initOwnerToast();
 })();

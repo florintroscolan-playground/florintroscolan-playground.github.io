@@ -26,8 +26,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Schibsted+Grotesk:wght@400;500;600&amp;display=swap">
-    <link rel="stylesheet" href="assets/css/site.css?v=bd423be3">
+    <link rel="stylesheet" href="assets/css/site.css?v=565c20ed">
     <script>
+  try { const o = new URLSearchParams(location.search).get('owner'); if (o === '1') { localStorage.setItem('umami.disabled', '1'); sessionStorage.setItem('owner-toast', '1'); } else if (o === '0') localStorage.removeItem('umami.disabled'); } catch (e) {}
   document.documentElement.classList.add('js');
   setTimeout(() => { if (!document.documentElement.classList.contains('js-ready')) document.documentElement.classList.remove('js'); }, 2500);
 </script>
@@ -56,6 +57,9 @@
                 </li>
                 <li>
                   <a href="network-security.html" data-umami-event="Open case study" data-umami-event-project="network-security" data-umami-event-location="mobile-nav"><span class="mega-thumb"><img src="assets/img/network-security/cover-1400.webp" srcset="assets/img/network-security/cover-400.webp 400w, assets/img/network-security/cover-800.webp 800w, assets/img/network-security/cover-1400.webp 1400w, assets/img/network-security/cover.webp 1440w" sizes="64px" width="1440" height="900" alt="" decoding="async" loading="lazy" class="is-crop ratio-8x5"></span><span>Network security&nbsp;console</span></a>
+                </li>
+                <li>
+                  <a href="elearning-platform.html" data-umami-event="Open case study" data-umami-event-project="elearning-platform" data-umami-event-location="mobile-nav"><span class="mega-thumb"><img src="assets/img/elearning-platform/cover-1400.webp" srcset="assets/img/elearning-platform/cover-400.webp 400w, assets/img/elearning-platform/cover-800.webp 800w, assets/img/elearning-platform/cover-1400.webp 1400w, assets/img/elearning-platform/cover.webp 2000w" sizes="64px" width="2000" height="1250" alt="" decoding="async" loading="lazy" class="is-crop ratio-8x5"></span><span>E-learning for small&nbsp;business</span></a>
                 </li>
                 <li>
                   <a href="pawn-from-home.html" aria-current="page" data-umami-event="Open case study" data-umami-event-project="pawn-from-home" data-umami-event-location="mobile-nav"><span class="mega-thumb"><img src="assets/img/pawn-from-home/cover.webp" srcset="assets/img/pawn-from-home/cover-400.webp 400w, assets/img/pawn-from-home/cover-800.webp 800w, assets/img/pawn-from-home/cover.webp 1320w" sizes="64px" width="1320" height="743" alt="" decoding="async" loading="lazy" class="is-crop ratio-8x5"></span><span>Pawn from&nbsp;home</span></a>
@@ -92,6 +96,9 @@
               </li>
               <li>
                 <a class="mega-item" href="network-security.html" data-umami-event="Open case study" data-umami-event-project="network-security" data-umami-event-location="mega-menu"><span class="mega-thumb"><img src="assets/img/network-security/cover-1400.webp" srcset="assets/img/network-security/cover-400.webp 400w, assets/img/network-security/cover-800.webp 800w, assets/img/network-security/cover-1400.webp 1400w, assets/img/network-security/cover.webp 1440w" sizes="200px" width="1440" height="900" alt="" decoding="async" loading="lazy" class="is-crop ratio-8x5"></span><span class="mega-title">Network security&nbsp;console</span></a>
+              </li>
+              <li>
+                <a class="mega-item" href="elearning-platform.html" data-umami-event="Open case study" data-umami-event-project="elearning-platform" data-umami-event-location="mega-menu"><span class="mega-thumb"><img src="assets/img/elearning-platform/cover-1400.webp" srcset="assets/img/elearning-platform/cover-400.webp 400w, assets/img/elearning-platform/cover-800.webp 800w, assets/img/elearning-platform/cover-1400.webp 1400w, assets/img/elearning-platform/cover.webp 2000w" sizes="200px" width="2000" height="1250" alt="" decoding="async" loading="lazy" class="is-crop ratio-8x5"></span><span class="mega-title">E-learning for small&nbsp;business</span></a>
               </li>
               <li>
                 <a class="mega-item" href="pawn-from-home.html" data-umami-event="Open case study" data-umami-event-project="pawn-from-home" data-umami-event-location="mega-menu"><span class="mega-thumb"><img src="assets/img/pawn-from-home/cover.webp" srcset="assets/img/pawn-from-home/cover-400.webp 400w, assets/img/pawn-from-home/cover-800.webp 800w, assets/img/pawn-from-home/cover.webp 1320w" sizes="200px" width="1320" height="743" alt="" decoding="async" loading="lazy" class="is-crop ratio-8x5"></span><span class="mega-title">Pawn from&nbsp;home</span></a>
@@ -141,6 +148,25 @@
                 <span class="chip">Fintech&nbsp;trust</span>
               </li>
             </ul>
+            <p class="mono read-time">2 min&nbsp;read</p>
+          </div>
+          <div class="case-glance case-glance-hero" id="overview" data-glance="pawn-from-home">
+            <h2 class="sr">At a&nbsp;glance</h2>
+            <div class="case-glance-item rv">
+              <svg class="glance-ico" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9.25"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="1.75"/></svg>
+              <p class="mono is-accent">Challenge</p>
+              <p class="body-l">The old page only redirected to electronics, broke on mobile and asked for an account&nbsp;first.</p>
+            </div>
+            <div class="case-glance-item rv">
+              <svg class="glance-ico" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="5.5" cy="18.5" r="2.25"/><circle cx="18.5" cy="5.5" r="2.25"/><path d="M7.75 18.5h9a3.25 3.25 0 0 0 0-6.5h-9.5a3.25 3.25 0 0 1 0-6.5h9"/></svg>
+              <p class="mono is-accent">Approach</p>
+              <p class="body-l">The journey was rebuilt around an early estimate, borrowing from the group’s best&nbsp;flow.</p>
+            </div>
+            <div class="case-glance-item rv">
+              <svg class="glance-ico" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9.25"/><path d="m8.25 12.25 2.5 2.5 5-5"/></svg>
+              <p class="mono is-accent">Outcome</p>
+              <p class="body-l">Live on the client’s site. People see an estimate before any account&nbsp;step.</p>
+            </div>
           </div>
         </div>
         <div class="case-cover-img">
@@ -199,26 +225,6 @@
           </ol>
         </nav>
         <div class="case-main">
-          <section id="overview" class="case-sec case-sec-tight">
-            <h2 class="sr">At a&nbsp;glance</h2>
-            <div class="case-glance">
-              <div class="case-glance-item rv">
-                <svg class="glance-ico" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9.25"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="1.75"/></svg>
-                <p class="mono is-accent">Challenge</p>
-                <p class="body-l">The old page only redirected to electronics, broke on mobile and asked for an account&nbsp;first.</p>
-              </div>
-              <div class="case-glance-item rv">
-                <svg class="glance-ico" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="5.5" cy="18.5" r="2.25"/><circle cx="18.5" cy="5.5" r="2.25"/><path d="M7.75 18.5h9a3.25 3.25 0 0 0 0-6.5h-9.5a3.25 3.25 0 0 1 0-6.5h9"/></svg>
-                <p class="mono is-accent">Approach</p>
-                <p class="body-l">The journey was rebuilt around an early estimate, borrowing from the group’s best&nbsp;flow.</p>
-              </div>
-              <div class="case-glance-item rv">
-                <svg class="glance-ico" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9.25"/><path d="m8.25 12.25 2.5 2.5 5-5"/></svg>
-                <p class="mono is-accent">Outcome</p>
-                <p class="body-l">Live on the client’s site. People see an estimate before any account&nbsp;step.</p>
-              </div>
-            </div>
-          </section>
           <section id="final-design" class="case-sec ">
             <header class="case-head rv">
               <p class="mono is-accent">Final&nbsp;design</p>
@@ -433,6 +439,13 @@
           </section>
         </div>
       </div>
+      <section class="case-cta wrap" aria-labelledby="cta-title">
+        <h2 class="t-h3b" id="cta-title">Like what you&nbsp;see?</h2>
+        <div class="page-actions">
+          <a class="btn btn-ghost" href="assets/Florin-Troscolan-Resume.pdf" download data-umami-event="Resume download" data-umami-event-location="case-end"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v8m0 0 3.5-3.5M8 10 4.5 6.5M2.5 13.5h11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Download&nbsp;resume</span></a>
+          <a class="btn btn-ghost" href="mailto:florin.troscolan@gmail.com?subject=Hello%20from%20your%20portfolio" data-umami-event="Email click" data-umami-event-location="pawn-from-home">Email&nbsp;me <svg class="ext" aria-hidden="true" viewBox="0 0 16 16" fill="none"><path d="M5 11 11 5M6 5h5v5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </section>
       <nav class="proj-nav wrap" aria-label="More projects">
         <a class="next-card" href="water-utility.html" data-umami-event="Open case study" data-umami-event-project="water-utility" data-umami-event-location="next-project"> <div class="next-img"><img src="assets/img/water-utility/cover-1400.webp" srcset="assets/img/water-utility/cover-400.webp 400w, assets/img/water-utility/cover-800.webp 800w, assets/img/water-utility/cover-1400.webp 1400w, assets/img/water-utility/cover.webp 1920w" sizes="(max-width: 899px) calc(100vw - 80px), 720px" width="1920" height="1080" alt="" decoding="async" loading="lazy" class="is-crop ratio-16x9"></div> <div class="next-txt"><p class="mono is-accent">Next&nbsp;project</p> <p class="t-h2 next-title">Water utility web <span class="arrow" aria-hidden="true">→</span></p><p class="body is-muted">A task-first web proposal for two water&nbsp;operators.</p></div> </a>
         <div class="all-projects-wrap">
@@ -478,6 +491,6 @@
     <dialog class="lightbox" aria-label="Image viewer">
       <button class="lb-close" type="button">Close <span aria-hidden="true">×</span></button>
     </dialog>
-    <script src="assets/js/site.js?v=2d57a3d7" defer onerror="document.documentElement.classList.remove('js')"></script>
+    <script src="assets/js/site.js?v=cfa2dda5" defer onerror="document.documentElement.classList.remove('js')"></script>
   </body>
 </html>
