@@ -3980,43 +3980,9 @@ img.is-crop {
   aspect-ratio: 8 / 5;
 }
 
-.w-cap-1320 {
-  max-width: 1320px;
-}
-
-.w-cap-1366 {
-  max-width: 1366px;
-}
-
-.w-cap-1440 {
-  max-width: 1440px;
-}
-
-.w-cap-1920 {
-  max-width: 1920px;
-}
-
-.w-cap-1964 {
-  max-width: 1964px;
-}
-
-.w-cap-2000 {
-  max-width: 2000px;
-}
-
-img.is-crop.obj-50-45,
-.tile.is-fill img.obj-50-45 {
-  object-position: 50% 45%;
-}
-
 img.is-crop.obj-50-50,
 .tile.is-fill img.obj-50-50 {
   object-position: 50% 50%;
-}
-
-img.is-crop.obj-50-60,
-.tile.is-fill img.obj-50-60 {
-  object-position: 50% 60%;
 }
 
 
@@ -5501,4 +5467,12 @@ img.is-crop.obj-50-60,
   .dg-menu-item {
     transition: none;
   }
+}
+
+/* Case cover as a device render (round 17): 16:10 cut at build time, so no crop here; never taller than 86vh */
+.case-cover-img img.cover-render {
+  width: min(100%, 1248px, 137.6vh);
+  height: auto;
+  max-height: none;
+  object-fit: fill;
 }
