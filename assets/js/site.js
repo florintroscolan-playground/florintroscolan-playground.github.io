@@ -683,9 +683,22 @@
       frame = hovering && Math.abs(targetX - x) + Math.abs(targetY - y) > 0.5 ? requestAnimationFrame(follow) : null;
     };
 
+    /* "Preview view": the hover card stayed open 1.2s on a row, once per project per page view */
+    const seenPreview = new Set();
+    let dwell = 0;
+    const armDwell = (row) => {
+      clearTimeout(dwell);
+      const project = row.dataset.umamiEventProject || row.getAttribute('href') || '';
+      if (seenPreview.has(project)) return;
+      dwell = setTimeout(() => {
+        seenPreview.add(project);
+        track('Preview view', { project });
+      }, 1200);
+    };
     rows.forEach((row) => {
       row.addEventListener('mouseenter', (event) => {
         if (!fine.matches) return;
+        armDwell(row);
         hovering = true;
         x = targetX = event.clientX;
         y = targetY = event.clientY;
@@ -699,6 +712,7 @@
         if (!frame) frame = requestAnimationFrame(follow);
       });
       row.addEventListener('mouseleave', () => {
+        clearTimeout(dwell);
         hovering = false;
         hide();
       });
@@ -732,6 +746,11 @@
         image.src = link.getAttribute('href');
         image.alt = thumb ? thumb.alt : '';
         dialog.showModal();
+        const mock = Boolean(link.closest('.is-mock, [data-slot="hero-mock"]')) || /\/mock-/.test(link.getAttribute('href'));
+        track('Image zoom', {
+          page: (location.pathname.split('/').pop() || 'index').replace('.html', ''),
+          kind: mock ? 'mockup' : 'screen',
+        });
       });
     });
     const close = () => dialog.close();
