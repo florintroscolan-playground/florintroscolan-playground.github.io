@@ -26,7 +26,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Schibsted+Grotesk:wght@400;500;600&amp;display=swap">
-    <link rel="stylesheet" href="assets/css/site.css?v=5bf02e60">
+    <link rel="stylesheet" href="assets/css/site.css?v=082244db">
     <script>
   try { const o = new URLSearchParams(location.search).get('owner'); if (o === '1') { localStorage.setItem('umami.disabled', '1'); sessionStorage.setItem('owner-toast', '1'); } else if (o === '0') localStorage.removeItem('umami.disabled'); } catch (e) {}
   document.documentElement.classList.add('js');
@@ -337,21 +337,7 @@
               <figure class="case-fig case-wide case-diagram rv" data-case="simulation">
                 <div class="dg dg-hours" data-diagram="core-hours">
                   <div class="dg-calc">
-                    <p class="mono dg-tag">Example</p>
-                    <div class="dg-eq">
-                      <div class="dg-term">
-                        <span class="dg-val"><span class="dg-num" data-cores>16</span>&nbsp;cores</span>
-                        <span class="dg-steps"><button class="dg-step" type="button" data-step="cores" data-dir="-1" aria-label="Fewer cores">&minus;</button><button class="dg-step" type="button" data-step="cores" data-dir="1" aria-label="More cores">+</button></span>
-                      </div>
-                      <span class="dg-op" aria-hidden="true">&times;</span>
-                      <div class="dg-term">
-                        <span class="dg-val"><span class="dg-num" data-hours>0.5</span>&nbsp;hours</span>
-                        <span class="dg-steps"><button class="dg-step" type="button" data-step="hours" data-dir="-1" aria-label="Fewer hours">&minus;</button><button class="dg-step" type="button" data-step="hours" data-dir="1" aria-label="More hours">+</button></span>
-                      </div>
-                      <span class="dg-op" aria-hidden="true">=</span>
-                      <output class="dg-result" aria-live="polite"><span class="dg-num" data-result>8</span>&nbsp;core-hours<span class="dg-flag">&nbsp;&middot; not enough core-hours</span></output>
-                    </div>
-                    <p class="body dg-hint js-only">Example balance: 8 core-hours. Raise cores or hours past&nbsp;it.</p>
+                    <p class="dg-eq dg-eq--static" aria-label="16 cores times 0.5 hours equals 8 core-hours"> <span class="dg-term"><span class="dg-val">16&nbsp;cores</span></span><span class="dg-op" aria-hidden="true">&times;</span> <span class="dg-term"><span class="dg-val">0.5&nbsp;hours</span></span><span class="dg-tail"><span class="dg-op" aria-hidden="true">=</span> <span class="dg-result">8&nbsp;core-hours</span></span></p>
                   </div>
                   <div class="dg-groups">
                     <div class="dg-group">
@@ -562,6 +548,6 @@
     <dialog class="lightbox" aria-label="Image viewer">
       <button class="lb-close" type="button">Close <span aria-hidden="true">×</span></button>
     </dialog>
-    <script src="assets/js/site.js?v=e98ae7f6" defer onerror="document.documentElement.classList.remove('js')"></script>
+    <script src="assets/js/site.js?v=dc82e327" defer onerror="document.documentElement.classList.remove('js')"></script>
   </body>
 </html>

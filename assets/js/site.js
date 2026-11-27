@@ -1189,35 +1189,12 @@
       }));
     };
     const coreHours = (block) => {
-      const values = { cores: [4, 8, 16, 32, 64], hours: [0.25, 0.5, 1, 2] };
-      const at = { cores: 2, hours: 1 };
-      const balance = 8;
-      const result = block.querySelector('[data-result]');
       const blocking = $$('.dg-state.is-block', block);
       const lines = $$('.dg-desc-line', block);
       const show = (key) => {
         blocking.forEach((b) => b.setAttribute('aria-pressed', b.dataset.state === key ? 'true' : 'false'));
         lines.forEach((l) => l.classList.toggle('is-on', l.dataset.for === key));
       };
-      const render = () => {
-        Object.keys(at).forEach((k) => {
-          block.querySelector(`[data-${k}]`).textContent = String(values[k][at[k]]);
-          $$(`[data-step="${k}"]`, block).forEach((b) => {
-            const next = at[k] + Number(b.dataset.dir);
-            b.disabled = next < 0 || next >= values[k].length;
-          });
-        });
-        const total = values.cores[at.cores] * values.hours[at.hours];
-        result.textContent = String(total);
-        const over = total > balance;
-        block.classList.toggle('is-over', over);
-        if (over) show('not-enough');
-      };
-      $$('.dg-step', block).forEach((b) => b.addEventListener('click', () => {
-        at[b.dataset.step] += Number(b.dataset.dir);
-        render();
-        firstUse(block);
-      }));
       blocking.forEach((b) => {
         const pick = () => {
           show(b.dataset.state);
@@ -1226,7 +1203,7 @@
         b.addEventListener('click', pick);
         b.addEventListener('mouseenter', pick);
       });
-      render();
+      show('not-enough');
     };
     const loop = (block) => {
       const steps = $$('.dg-loop-step', block);

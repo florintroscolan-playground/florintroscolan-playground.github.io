@@ -5100,6 +5100,20 @@ img.is-crop.obj-50-60,
   transition: background-color .22s var(--ease), color .22s var(--ease);
 }
 
+.dg-eq--static {
+  margin: 0;
+}
+
+.dg-tail {
+  display: inline-flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.dg-eq--static .dg-term {
+  padding-right: 20px;
+}
+
 .dg-flag {
   display: none;
 }
