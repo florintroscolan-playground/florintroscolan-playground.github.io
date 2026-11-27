@@ -526,7 +526,6 @@
       let timer;
       button.addEventListener('click', () => {
         const value = button.dataset.copy;
-        track('Email copy', { page: (location.pathname.split('/').pop() || 'index').replace('.html', '') });
         const done = () => {
           button.classList.add('is-copied');
           label.textContent = 'Copied';
