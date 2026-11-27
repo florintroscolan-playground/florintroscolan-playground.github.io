@@ -4004,6 +4004,21 @@ img.is-crop {
   max-width: 2000px;
 }
 
+img.is-crop.obj-50-45,
+.tile.is-fill img.obj-50-45 {
+  object-position: 50% 45%;
+}
+
+img.is-crop.obj-50-50,
+.tile.is-fill img.obj-50-50 {
+  object-position: 50% 50%;
+}
+
+img.is-crop.obj-50-60,
+.tile.is-fill img.obj-50-60 {
+  object-position: 50% 60%;
+}
+
 
 
 
@@ -4913,3 +4928,79 @@ img.is-crop {
 }
 
 /* stylelint-enable value-no-vendor-prefix */
+
+/* Case galleries, round 14: device renders and asymmetric (bento) blocks mixed with the real screens.
+   Renders are the tile's own background: no frame or shadow, the figure radius, cropped only at the background.
+   trio: one tall tile beside two stacked screens; split: a 7/5 row. Single column below 768px, in source order. */
+.case-bento {
+  display: grid;
+  gap: clamp(24px, 3vw, 40px);
+  align-items: start;
+}
+
+.tile-stage {
+  position: relative;
+  overflow: hidden;
+}
+
+@media (width >= 768px) {
+  .bento-trio {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  }
+
+  .bento-trio .tile-big {
+    grid-row: 1 / span 2;
+  }
+
+  .bento-trio.bento-right {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  }
+
+  .bento-trio.bento-right .tile-big {
+    grid-column: 2;
+  }
+
+  .bento-trio.bento-right .tile-small {
+    grid-column: 1;
+  }
+
+  .bento-trio.bento-8-4 {
+    grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+  }
+
+  .bento-trio.bento-8-4.bento-right {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  }
+
+  .bento-split {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  }
+
+  .bento-split.bento-right {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  }
+
+  .bento-split.bento-right .tile-narrow {
+    grid-area: 1 / 1;
+  }
+
+  /* the tall or narrow tile takes the row's height; its render fills it, cropped at the background */
+  .tile.is-fill {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+  }
+
+  .tile.is-fill .tile-stage {
+    flex: 1 1 auto;
+    min-height: 0;
+    border-radius: 12px;
+  }
+
+  .tile.is-fill img {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    object-fit: cover;
+  }
+}
