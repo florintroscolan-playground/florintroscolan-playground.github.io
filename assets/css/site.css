@@ -1659,6 +1659,10 @@ p.lead + p.lead {
   transition: transform .5s var(--ease);
 }
 
+.also-vis-1 img {
+  object-position: 50% 0;
+}
+
 .also-card:hover .also-vis img {
   transform: scale(1.03);
 }
