@@ -26,7 +26,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Schibsted+Grotesk:wght@400;500;600&amp;display=swap">
-    <link rel="stylesheet" href="assets/css/site.css?v=eb0b9002">
+    <link rel="stylesheet" href="assets/css/site.css?v=5bf02e60">
     <script>
   try { const o = new URLSearchParams(location.search).get('owner'); if (o === '1') { localStorage.setItem('umami.disabled', '1'); sessionStorage.setItem('owner-toast', '1'); } else if (o === '0') localStorage.removeItem('umami.disabled'); } catch (e) {}
   document.documentElement.classList.add('js');
@@ -378,9 +378,34 @@
             </div>
             <div class="case-art">
               <h3 class="t-h3 rv">Rewards follow learning, not&nbsp;clicks</h3>
-              <figure class="case-fig case-wide rv">
-                <a class="zoom" href="assets/img/financial-education/gallery-engagement-loop.webp" aria-label="Open full image: Rewards follow learning, not clicks"><img src="assets/img/financial-education/gallery-engagement-loop-1400.webp" srcset="assets/img/financial-education/gallery-engagement-loop-400.webp 400w, assets/img/financial-education/gallery-engagement-loop-800.webp 800w, assets/img/financial-education/gallery-engagement-loop-1400.webp 1400w, assets/img/financial-education/gallery-engagement-loop.webp 2000w" sizes="(max-width: 1023px) 100vw, 1000px" width="2000" height="854" alt="Rewards follow learning, not clicks: Lesson, streak, level, badge, share and leaderboard, then the next lesson." decoding="async" loading="lazy"></a>
-                <figcaption><span class="cap-text">Lesson, streak, level, badge, share and leaderboard, then the next&nbsp;lesson.</span><span class="zoom-hint mono" aria-hidden="true">Tap to&nbsp;zoom</span></figcaption>
+              <figure class="case-fig case-wide case-diagram rv" data-case="financial-education">
+                <div class="dg dg-loop" data-diagram="engagement-loop">
+                  <ol class="dg-loop-list">
+                    <li>
+                      <button class="dg-loop-step" type="button" aria-pressed="true" data-i="0"><span class="mono dg-n">01</span><span class="dg-name">Finish a lesson</span><span class="mono dg-sub">+10 XP toast</span></button>
+                    </li>
+                    <li>
+                      <button class="dg-loop-step" type="button" aria-pressed="false" data-i="1"><span class="mono dg-n">02</span><span class="dg-name">Keep a streak</span><span class="mono dg-sub">Days in a row</span></button>
+                    </li>
+                    <li>
+                      <button class="dg-loop-step" type="button" aria-pressed="false" data-i="2"><span class="mono dg-n">03</span><span class="dg-name">Level up</span><span class="mono dg-sub">Level 3, 1500/3500</span></button>
+                    </li>
+                    <li>
+                      <button class="dg-loop-step" type="button" aria-pressed="false" data-i="3"><span class="mono dg-n">04</span><span class="dg-name">Earn a badge</span><span class="mono dg-sub">1 of 19</span></button>
+                    </li>
+                    <li>
+                      <button class="dg-loop-step" type="button" aria-pressed="false" data-i="4"><span class="mono dg-n">05</span><span class="dg-name">Share it</span><span class="mono dg-sub">Square, story, wide</span></button>
+                    </li>
+                    <li>
+                      <button class="dg-loop-step" type="button" aria-pressed="false" data-i="5"><span class="mono dg-n">06</span><span class="dg-name">Climb the board</span><span class="mono dg-sub">Monthly leaderboard</span></button>
+                    </li>
+                  </ol>
+                  <div class="dg-loop-foot">
+                    <button class="btn btn-ghost dg-next js-only" type="button">Next step</button>
+                    <p class="body dg-loop-note">The next lesson starts the loop again. The prize mechanics stayed open for weeks, and that is the one part I would settle&nbsp;earlier.</p>
+                  </div>
+                </div>
+                <figcaption><span class="cap-text">Lesson, streak, level, badge, share and leaderboard, then the next&nbsp;lesson.</span></figcaption>
               </figure>
             </div>
           </section>
@@ -524,6 +549,6 @@
     <dialog class="lightbox" aria-label="Image viewer">
       <button class="lb-close" type="button">Close <span aria-hidden="true">×</span></button>
     </dialog>
-    <script src="assets/js/site.js?v=2240077d" defer onerror="document.documentElement.classList.remove('js')"></script>
+    <script src="assets/js/site.js?v=e98ae7f6" defer onerror="document.documentElement.classList.remove('js')"></script>
   </body>
 </html>

@@ -1166,6 +1166,116 @@
    * (scale and a halo on ::after), with an orange fill along the line when the stages sit in one row, then
    * repeats only the halo ripple every 6s while visible. No arc here. Reduced motion or no JS: the static list.
    */
+  /* 23. Coded diagrams ---------------------------------------------------- */
+
+  /**
+   * Four small diagrams (round 15), wired when they come near the viewport. Colour, value and position change in
+   * CSS (200 to 300ms); reduced motion turns those transitions off there. One "Diagram interact" event per block.
+   */
+  function initDiagrams() {
+    const blocks = $$('.case-diagram .dg');
+    if (!blocks.length) return;
+    const firstUse = (block) => {
+      if (block.dataset.used) return;
+      block.dataset.used = '1';
+      track('Diagram interact', { case: block.closest('.case-diagram').dataset.case, diagram: block.dataset.diagram });
+    };
+    const toggle = (block) => {
+      const buttons = $$('.dg-tog', block);
+      buttons.forEach((btn) => btn.addEventListener('click', () => {
+        block.dataset.view = btn.dataset.show;
+        buttons.forEach((b) => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+        firstUse(block);
+      }));
+    };
+    const coreHours = (block) => {
+      const values = { cores: [4, 8, 16, 32, 64], hours: [0.25, 0.5, 1, 2] };
+      const at = { cores: 2, hours: 1 };
+      const balance = 8;
+      const result = block.querySelector('[data-result]');
+      const blocking = $$('.dg-state.is-block', block);
+      const lines = $$('.dg-desc-line', block);
+      const show = (key) => {
+        blocking.forEach((b) => b.setAttribute('aria-pressed', b.dataset.state === key ? 'true' : 'false'));
+        lines.forEach((l) => l.classList.toggle('is-on', l.dataset.for === key));
+      };
+      const render = () => {
+        Object.keys(at).forEach((k) => {
+          block.querySelector(`[data-${k}]`).textContent = String(values[k][at[k]]);
+          $$(`[data-step="${k}"]`, block).forEach((b) => {
+            const next = at[k] + Number(b.dataset.dir);
+            b.disabled = next < 0 || next >= values[k].length;
+          });
+        });
+        const total = values.cores[at.cores] * values.hours[at.hours];
+        result.textContent = String(total);
+        const over = total > balance;
+        block.classList.toggle('is-over', over);
+        if (over) show('not-enough');
+      };
+      $$('.dg-step', block).forEach((b) => b.addEventListener('click', () => {
+        at[b.dataset.step] += Number(b.dataset.dir);
+        render();
+        firstUse(block);
+      }));
+      blocking.forEach((b) => {
+        const pick = () => {
+          show(b.dataset.state);
+          firstUse(block);
+        };
+        b.addEventListener('click', pick);
+        b.addEventListener('mouseenter', pick);
+      });
+      render();
+    };
+    const loop = (block) => {
+      const steps = $$('.dg-loop-step', block);
+      let current = 0;
+      const select = (i) => {
+        current = (i + steps.length) % steps.length;
+        steps.forEach((s, j) => {
+          s.setAttribute('aria-pressed', j === current ? 'true' : 'false');
+          s.classList.toggle('is-next', j === (current + 1) % steps.length);
+        });
+      };
+      steps.forEach((s, i) => {
+        s.addEventListener('click', () => {
+          select(i);
+          firstUse(block);
+        });
+        s.addEventListener('mouseenter', () => select(i));
+        s.addEventListener('focus', () => select(i));
+      });
+      const next = block.querySelector('.dg-next');
+      if (next) {
+        next.addEventListener('click', () => {
+          select(current + 1);
+          firstUse(block);
+        });
+      }
+      select(0);
+    };
+    const wire = { 'core-hours': coreHours, 'engagement-loop': loop, 'information-architecture': toggle, 'nav-four-to-three': toggle };
+    const start = (block) => {
+      if (block.dataset.ready) return;
+      block.dataset.ready = '1';
+      const fn = wire[block.dataset.diagram];
+      if (fn) fn(block);
+    };
+    if (!('IntersectionObserver' in window)) {
+      blocks.forEach(start);
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        start(e.target);
+        io.unobserve(e.target);
+      });
+    }, { rootMargin: '200px 0px' });
+    blocks.forEach((b) => io.observe(b));
+  }
+
   /* 22. Anatomy of a decision: tabs between real decisions -------------- */
 
   /**
@@ -1310,4 +1420,5 @@
   initStagePulse();
   initStageRow();
   initAnatomyTabs();
+  initDiagrams();
 })();

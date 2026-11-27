@@ -26,7 +26,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Schibsted+Grotesk:wght@400;500;600&amp;display=swap">
-    <link rel="stylesheet" href="assets/css/site.css?v=eb0b9002">
+    <link rel="stylesheet" href="assets/css/site.css?v=5bf02e60">
     <script>
   try { const o = new URLSearchParams(location.search).get('owner'); if (o === '1') { localStorage.setItem('umami.disabled', '1'); sessionStorage.setItem('owner-toast', '1'); } else if (o === '0') localStorage.removeItem('umami.disabled'); } catch (e) {}
   document.documentElement.classList.add('js');
@@ -334,9 +334,63 @@
             </header>
             <div class="case-art">
               <h3 class="t-h3 rv">Compute became the product, so every wait had a&nbsp;cost</h3>
-              <figure class="case-fig case-wide rv">
-                <a class="zoom" href="assets/img/simulation/gallery-core-hour-model.webp" aria-label="Open full image: Compute became the product, so every wait had a cost"><img src="assets/img/simulation/gallery-core-hour-model-1400.webp" srcset="assets/img/simulation/gallery-core-hour-model-400.webp 400w, assets/img/simulation/gallery-core-hour-model-800.webp 800w, assets/img/simulation/gallery-core-hour-model-1400.webp 1400w, assets/img/simulation/gallery-core-hour-model.webp 2000w" sizes="(max-width: 1023px) 100vw, 1000px" width="2000" height="532" alt="Compute became the product, so every wait had a cost: A 16-core job running for 30 minutes uses 8 core-hours." decoding="async" loading="lazy"></a>
-                <figcaption><span class="cap-text">A 16-core job running for 30 minutes uses <span class="nw">8 core-hours.</span></span><span class="zoom-hint mono" aria-hidden="true">Tap to&nbsp;zoom</span></figcaption>
+              <figure class="case-fig case-wide case-diagram rv" data-case="simulation">
+                <div class="dg dg-hours" data-diagram="core-hours">
+                  <div class="dg-calc">
+                    <p class="mono dg-tag">Example</p>
+                    <div class="dg-eq">
+                      <div class="dg-term">
+                        <span class="dg-val"><span class="dg-num" data-cores>16</span>&nbsp;cores</span>
+                        <span class="dg-steps"><button class="dg-step" type="button" data-step="cores" data-dir="-1" aria-label="Fewer cores">&minus;</button><button class="dg-step" type="button" data-step="cores" data-dir="1" aria-label="More cores">+</button></span>
+                      </div>
+                      <span class="dg-op" aria-hidden="true">&times;</span>
+                      <div class="dg-term">
+                        <span class="dg-val"><span class="dg-num" data-hours>0.5</span>&nbsp;hours</span>
+                        <span class="dg-steps"><button class="dg-step" type="button" data-step="hours" data-dir="-1" aria-label="Fewer hours">&minus;</button><button class="dg-step" type="button" data-step="hours" data-dir="1" aria-label="More hours">+</button></span>
+                      </div>
+                      <span class="dg-op" aria-hidden="true">=</span>
+                      <output class="dg-result" aria-live="polite"><span class="dg-num" data-result>8</span>&nbsp;core-hours<span class="dg-flag"> &middot; not enough core-hours</span></output>
+                    </div>
+                    <p class="body dg-hint js-only">Example balance: 8 core-hours. Raise cores or hours past&nbsp;it.</p>
+                  </div>
+                  <div class="dg-groups">
+                    <div class="dg-group">
+                      <p class="mono dg-glabel">Informative</p>
+                      <ul class="dg-cards">
+                        <li class="dg-state">
+                          <span class="mono">State</span>
+                          <span class="dg-name">Simulating</span>
+                        </li>
+                        <li class="dg-state">
+                          <span class="mono">State</span>
+                          <span class="dg-name">Syncing</span>
+                        </li>
+                        <li class="dg-state">
+                          <span class="mono">State</span>
+                          <span class="dg-name">Offline</span>
+                        </li>
+                        <li class="dg-state">
+                          <span class="mono">State</span>
+                          <span class="dg-name">Error</span>
+                        </li>
+                      </ul>
+                      <p class="body is-muted dg-gnote">Each got an explicit state, so people always know what is&nbsp;happening.</p>
+                    </div>
+                    <div class="dg-group is-blocking">
+                      <p class="mono dg-glabel">Blocking</p>
+                      <ul class="dg-cards">
+                        <li>
+                          <button class="dg-state is-block" type="button" data-state="not-enough" aria-pressed="false" aria-describedby="dg-ch-desc"><span class="mono">State</span><span class="dg-name">Not <span class="nw">enough core-hours</span></span></button>
+                        </li>
+                        <li>
+                          <button class="dg-state is-block" type="button" data-state="trial-ended" aria-pressed="false" aria-describedby="dg-ch-desc"><span class="mono">State</span><span class="dg-name">Trial ended</span></button>
+                        </li>
+                      </ul>
+                      <p class="body dg-desc" id="dg-ch-desc"><span class="dg-desc-line" data-for="not-enough">Not enough core-hours: the modal explains why before the&nbsp;upgrade.</span><span class="dg-desc-line" data-for="trial-ended">End of trial, stated plainly, with one way&nbsp;back.</span></p>
+                    </div>
+                  </div>
+                </div>
+                <figcaption><span class="cap-text">A 16-core job running for 30 minutes uses <span class="nw"><span class="nw">8 core-hours.</span></span></span></figcaption>
               </figure>
             </div>
             <div class="case-art">
@@ -508,6 +562,6 @@
     <dialog class="lightbox" aria-label="Image viewer">
       <button class="lb-close" type="button">Close <span aria-hidden="true">×</span></button>
     </dialog>
-    <script src="assets/js/site.js?v=2240077d" defer onerror="document.documentElement.classList.remove('js')"></script>
+    <script src="assets/js/site.js?v=e98ae7f6" defer onerror="document.documentElement.classList.remove('js')"></script>
   </body>
 </html>

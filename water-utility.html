@@ -26,7 +26,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Schibsted+Grotesk:wght@400;500;600&amp;display=swap">
-    <link rel="stylesheet" href="assets/css/site.css?v=eb0b9002">
+    <link rel="stylesheet" href="assets/css/site.css?v=5bf02e60">
     <script>
   try { const o = new URLSearchParams(location.search).get('owner'); if (o === '1') { localStorage.setItem('umami.disabled', '1'); sessionStorage.setItem('owner-toast', '1'); } else if (o === '0') localStorage.removeItem('umami.disabled'); } catch (e) {}
   document.documentElement.classList.add('js');
@@ -353,9 +353,65 @@
             </div>
             <div class="case-art">
               <h3 class="t-h3 rv">12 department items became 5 task-first&nbsp;pillars</h3>
-              <figure class="case-fig case-wide rv">
-                <a class="zoom" href="assets/img/water-utility/gallery-information-architecture.webp" aria-label="Open full image: 12 department items became 5 task-first pillars"><img src="assets/img/water-utility/gallery-information-architecture-1400.webp" srcset="assets/img/water-utility/gallery-information-architecture-400.webp 400w, assets/img/water-utility/gallery-information-architecture-800.webp 800w, assets/img/water-utility/gallery-information-architecture-1400.webp 1400w, assets/img/water-utility/gallery-information-architecture.webp 2000w" sizes="(max-width: 1023px) 100vw, 1000px" width="2000" height="893" alt="12 department items became 5 task-first pillars: The new sitemap starts from what customers come to do." decoding="async" loading="lazy"></a>
-                <figcaption><span class="cap-text">The new sitemap starts from what customers come to&nbsp;do.</span><span class="zoom-hint mono" aria-hidden="true">Tap to&nbsp;zoom</span></figcaption>
+              <figure class="case-fig case-wide case-diagram rv" data-case="water-utility">
+                <div class="dg dg-ia" data-diagram="information-architecture" data-view="before">
+                  <div class="dg-toggle js-only" role="group" aria-label="Sitemap">
+                    <button class="dg-tog" type="button" aria-pressed="true" data-show="before" aria-controls="dg-ia-before">Before</button>
+                    <button class="dg-tog" type="button" aria-pressed="false" data-show="after" aria-controls="dg-ia-after">After</button>
+                  </div>
+                  <div class="dg-ia-panels">
+                    <div class="dg-ia-panel is-before" id="dg-ia-before">
+                      <p class="mono">Before / 12 items by&nbsp;department</p>
+                      <ul class="dg-tiles">
+                        <li class="dg-tile">
+                          <span class="sr">Department&nbsp;item</span>
+                        </li>
+                        <li class="dg-tile">
+                          <span class="sr">Department&nbsp;item</span>
+                        </li>
+                        <li class="dg-tile is-named">Useful&nbsp;information</li>
+                        <li class="dg-tile">
+                          <span class="sr">Department&nbsp;item</span>
+                        </li>
+                        <li class="dg-tile">
+                          <span class="sr">Department&nbsp;item</span>
+                        </li>
+                        <li class="dg-tile">
+                          <span class="sr">Department&nbsp;item</span>
+                        </li>
+                        <li class="dg-tile">
+                          <span class="sr">Department&nbsp;item</span>
+                        </li>
+                        <li class="dg-tile">
+                          <span class="sr">Department&nbsp;item</span>
+                        </li>
+                        <li class="dg-tile">
+                          <span class="sr">Department&nbsp;item</span>
+                        </li>
+                        <li class="dg-tile is-named">Contact</li>
+                        <li class="dg-tile">
+                          <span class="sr">Department&nbsp;item</span>
+                        </li>
+                        <li class="dg-tile">
+                          <span class="sr">Department&nbsp;item</span>
+                        </li>
+                      </ul>
+                      <p class="body is-muted">Useful information: Billing, three levels&nbsp;deep</p>
+                      <p class="body is-muted">Contact: The only way to report an&nbsp;outage</p>
+                    </div>
+                    <div class="dg-ia-panel is-after on-dark" id="dg-ia-after">
+                      <p class="mono is-accent">After / 5 task-first&nbsp;pillars</p>
+                      <ol class="dg-pillars">
+                        <li class="is-first">Customers</li>
+                        <li>Services</li>
+                        <li>Water&nbsp;quality</li>
+                        <li>About&nbsp;us</li>
+                        <li>Online&nbsp;account</li>
+                      </ol>
+                    </div>
+                  </div>
+                </div>
+                <figcaption><span class="cap-text">The new sitemap starts from what customers come to&nbsp;do.</span></figcaption>
               </figure>
             </div>
             <div class="case-art">
@@ -513,6 +569,6 @@
     <dialog class="lightbox" aria-label="Image viewer">
       <button class="lb-close" type="button">Close <span aria-hidden="true">×</span></button>
     </dialog>
-    <script src="assets/js/site.js?v=2240077d" defer onerror="document.documentElement.classList.remove('js')"></script>
+    <script src="assets/js/site.js?v=e98ae7f6" defer onerror="document.documentElement.classList.remove('js')"></script>
   </body>
 </html>

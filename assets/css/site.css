@@ -5004,3 +5004,487 @@ img.is-crop.obj-50-60,
     object-fit: cover;
   }
 }
+
+/* Coded diagrams, round 15 (site.js initDiagrams): small interactive versions of four diagram images.
+   Panel, radii and type follow the figures; orange only where the image or the decision needs it.
+   Without JS: every block is a complete static diagram (both views, every description). */
+.case-diagram .dg {
+  display: grid;
+  gap: 24px;
+  padding: clamp(20px, 4vw, 48px);
+  border-radius: 12px;
+  background: var(--panel);
+}
+
+.dg .mono {
+  font-size: 12px;
+}
+
+.dg-card,
+.dg-state,
+.dg-loop-step,
+.dg-tile,
+.dg-pillars li {
+  border-radius: 12px;
+}
+
+.js-only {
+  display: none;
+}
+
+.js .js-only {
+  display: revert;
+}
+
+.dg-toggle {
+  gap: 4px;
+  justify-self: start;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--surface);
+}
+
+.js .dg-toggle {
+  display: inline-flex;
+}
+
+.dg-tog {
+  min-height: 44px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--fg);
+  font: 500 12px/1 var(--mono);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  transition: background-color .22s var(--ease), color .22s var(--ease);
+}
+
+.dg-tog[aria-pressed="true"] {
+  background: var(--ink);
+  color: #FFF;
+}
+
+.dg button:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 2px;
+}
+
+/* core-hours: the sum, then the states in two groups; only the blocking group is orange */
+.dg-eq {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.dg-term,
+.dg-result {
+  display: inline-flex;
+  gap: 12px;
+  align-items: center;
+  min-height: 56px;
+  padding: 6px 8px 6px 20px;
+  border-radius: 12px;
+  background: var(--ink);
+  color: #FFF;
+  font-size: 18px;
+}
+
+.dg-result {
+  gap: 0;
+  padding-right: 20px;
+  background: var(--surface);
+  color: var(--ink);
+  transition: background-color .22s var(--ease), color .22s var(--ease);
+}
+
+.dg-flag {
+  display: none;
+}
+
+.dg-hours.is-over .dg-result {
+  background: var(--orange);
+}
+
+.dg-hours.is-over .dg-flag {
+  display: inline;
+}
+
+.dg-steps {
+  display: none;
+  gap: 4px;
+}
+
+.js .dg-steps {
+  display: inline-flex;
+}
+
+.dg-step {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line-d);
+  border-radius: 8px;
+  background: transparent;
+  color: #FFF;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.dg-step:disabled {
+  opacity: .35;
+}
+
+.dg-op {
+  color: var(--fg-muted);
+  font-size: 20px;
+}
+
+.dg-tag {
+  color: var(--accent-fg);
+}
+
+.dg-calc {
+  display: grid;
+  gap: 12px;
+}
+
+.dg-groups {
+  display: grid;
+  gap: 24px;
+}
+
+@media (width >= 900px) {
+  .dg-groups {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  }
+}
+
+.dg-group {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.dg-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 140px), 1fr));
+  gap: 8px;
+}
+
+.is-blocking .dg-cards {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 160px), 1fr));
+}
+
+.dg-state {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  width: 100%;
+  min-height: 96px;
+  padding: 16px;
+  border: 1px solid var(--line-l);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  transition: background-color .22s var(--ease), box-shadow .22s var(--ease);
+}
+
+.dg-state .mono {
+  color: var(--fg-muted);
+}
+
+.dg-state.is-block {
+  border-color: transparent;
+  background: var(--orange);
+}
+
+.dg-state.is-block .mono {
+  color: var(--ink);
+}
+
+.dg-state.is-block[aria-pressed="true"] {
+  box-shadow: inset 0 0 0 2px var(--ink);
+}
+
+.dg-name {
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+.dg-desc-line {
+  display: block;
+}
+
+.js .dg-desc {
+  min-height: 4.5em;             /* room for the longest line, so showing one never moves the page */
+}
+
+.js .dg-desc-line {
+  display: none;
+}
+
+.js .dg-desc-line.is-on {
+  display: block;
+}
+
+/* engagement loop: one step lit, the next one outlined; the bar under the lit step is the connector */
+.dg-loop-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+  gap: 12px;
+}
+
+.dg-loop-step {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  min-height: 120px;
+  padding: 20px;
+  border: 1px solid var(--line-l);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  transition: background-color .22s var(--ease), color .22s var(--ease), border-color .22s var(--ease);
+}
+
+.dg-loop-step::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 20px;
+  right: 20px;
+  height: 2px;
+  background: var(--orange);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform .26s var(--ease);
+}
+
+.dg-loop-step .mono {
+  color: var(--fg-muted);
+}
+
+.dg-loop-step[aria-pressed="true"] {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: #FFF;
+}
+
+.dg-loop-step[aria-pressed="true"] .mono {
+  color: var(--muted-d);
+}
+
+.dg-loop-step[aria-pressed="true"]::after {
+  transform: scaleX(1);
+}
+
+.dg-loop-step.is-next {
+  border-color: var(--orange);
+}
+
+.dg-loop-foot {
+  display: grid;
+  gap: 16px;
+  align-items: center;
+}
+
+@media (width >= 768px) {
+  .dg-loop-foot {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+}
+
+.dg-loop-note {
+  padding: 16px 20px;
+  border: 1px dashed var(--orange);
+  border-radius: 12px;
+  color: var(--fg-muted);
+}
+
+.dg-next {
+  justify-self: start;
+}
+
+/* information architecture: before and after; with JS one view at a time, both in one grid cell (no jump) */
+.dg-ia-panels {
+  display: grid;
+  gap: 16px;
+}
+
+@media (width >= 768px) {
+  .dg-ia-panels {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .js .dg-ia-panels {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.dg-ia-panel {
+  display: grid;
+  gap: 16px;
+  align-content: start;
+  padding: clamp(20px, 3vw, 32px);
+  border-radius: 12px;
+  background: var(--surface);
+  transition: opacity .24s var(--ease);
+}
+
+.dg-ia-panel.is-after {
+  background: var(--ink);
+  color: #FFF;
+}
+
+.js .dg-ia-panel {
+  grid-area: 1 / 1;
+}
+
+.js .dg-ia[data-view="before"] .is-after,
+.js .dg-ia[data-view="after"] .is-before {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.dg-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 8px;
+}
+
+.dg-tile {
+  min-height: 44px;
+  background: var(--panel);
+}
+
+.dg-tile.is-named {
+  display: grid;
+  grid-column: span 2;
+  place-items: center;
+  padding: 8px 12px;
+  background: var(--ink);
+  color: #FFF;
+  font: 500 12px/1.3 var(--mono);
+  letter-spacing: .06em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.dg-pillars {
+  display: grid;
+  gap: 4px;
+}
+
+.dg-pillars li {
+  padding: 14px 20px;
+  font-size: 20px;
+}
+
+.dg-pillars li.is-first {
+  background: var(--orange);
+  color: var(--ink);
+}
+
+/* navigation: four tabs, then three, with settings in the user menu */
+.dg-nav-bars {
+  display: grid;
+  gap: 16px;
+}
+
+.js .dg-bar {
+  grid-area: 1 / 1;
+  transition: opacity .24s var(--ease);
+}
+
+.js .dg-nav[data-view="before"] .is-after,
+.js .dg-nav[data-view="after"] .is-before {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.dg-bar {
+  display: grid;
+  gap: 12px;
+  padding: 20px 24px;
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+@media (width >= 768px) {
+  .dg-bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .dg-bar-label {
+    grid-column: 1 / -1;
+  }
+}
+
+.dg-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+}
+
+.dg-tab {
+  padding-block: 8px;
+  border-bottom: 2px solid transparent;
+  color: var(--fg-muted);
+  font-size: 18px;
+}
+
+.dg-tab.is-on {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.dg-tab.is-settings {
+  color: var(--accent-fg);
+}
+
+.dg-user {
+  display: grid;
+  gap: 6px;
+  justify-items: start;
+}
+
+.dg-user-btn {
+  padding: 8px 14px;
+  border: 1px solid var(--line-l);
+  border-radius: 999px;
+  font-size: 16px;
+}
+
+.dg-menu-item {
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: var(--canvas);
+  box-shadow: inset 0 0 0 1px var(--orange);
+  color: var(--accent-fg);
+  font-size: 16px;
+  transition: opacity .24s var(--ease) .12s, transform .24s var(--ease) .12s;
+}
+
+.js .dg-nav[data-view="before"] .dg-menu-item {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dg-tog,
+  .dg-result,
+  .dg-state,
+  .dg-loop-step,
+  .dg-loop-step::after,
+  .dg-ia-panel,
+  .js .dg-bar,
+  .dg-menu-item {
+    transition: none;
+  }
+}
